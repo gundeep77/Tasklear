@@ -38,6 +38,8 @@ export const ToDoList = () => {
   const handleAddNewTask = (event) => {
     event.preventDefault();
     if (!taskValue) {
+      document.getElementById("new-task").value = "";
+      document.getElementById("new-task").focus();
       return;
     }
     if (addOrEdit === "Add New Task") {
