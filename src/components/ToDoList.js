@@ -101,7 +101,6 @@ export const ToDoList = () => {
             localStorage.setItem("allTodos", JSON.stringify(prevTasks));
             return prevTasks;
           });
-          console.log();
           setCount((prevCount) => prevCount + 1);
           return true;
         }
