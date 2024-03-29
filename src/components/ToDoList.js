@@ -161,7 +161,7 @@ export const ToDoList = () => {
     });
     setCount((prevCount) => prevCount + 1);
     setAddOrEdit("Add New Task");
-    document.getElementById("new-task").value = "";
+    document.getElementById("new-task").focus();
   };
 
   const handleCanceEdit = () => {
