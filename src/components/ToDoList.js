@@ -36,7 +36,7 @@ export const ToDoList = () => {
   };
 
   const handleAddNewTask = (event) => {
-    event.preventDefault()
+    event.preventDefault();
     if (!taskValue) {
       return;
     }
@@ -175,7 +175,11 @@ export const ToDoList = () => {
         autoFocus={true}
         onChange={handleTaskValueChange}
         id="new-task"
-        placeholder="Enter new task..."
+        placeholder={
+          addOrEdit === "Add New Task"
+            ? "Enter new task..."
+            : "Edit Your Task..."
+        }
         type="text"
       />
 
@@ -187,7 +191,7 @@ export const ToDoList = () => {
           Cancel Edit
         </button>
       )}
-      <p>No pending tasks!</p>
+      <h5>No pending tasks!</h5>
     </form>
   ) : (
     <div>
@@ -197,17 +201,20 @@ export const ToDoList = () => {
           autoFocus={true}
           onChange={handleTaskValueChange}
           id="new-task"
-          placeholder="Enter new task..."
+          placeholder={
+            addOrEdit === "Add New Task"
+              ? "Enter new task..."
+              : "Edit Your Task..."
+          }
           type="text"
         />
-
         <button id="add-task" type="submit">
           {addOrEdit}
         </button>
         {addOrEdit === "Edit Task" && (
           <button style={{ marginLeft: 0 }} onClick={handleCanceEdit}>
-          Cancel Edit
-        </button>
+            Cancel Edit
+          </button>
         )}
       </form>
       {allTasks.length && <button onClick={handleClearList}>Clear List</button>}
