@@ -1,0 +1,135 @@
+body {
+  height: 100vh;
+  /* height: auto; */
+  background: linear-gradient(#e66465, #9198e5);
+  text-align: center;
+  font-size: x-large;
+}
+
+.container {
+  text-align: center;
+  display: flex;
+}
+
+.tasks-table {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+button {
+  margin: 20px;
+  border-radius: 10px;
+  text-decoration: none;
+  border: none;
+  padding: 10px;
+  border: 2px solid black;
+  background-color: #eb9f34;
+}
+
+button:hover {
+  margin: 20px;
+  border-radius: 10px;
+  text-decoration: none;
+  border: none;
+  padding: 10px;
+  border: 2px solid black;
+  background-color: rgb(241, 233, 233);
+}
+
+.edit-delete-task {
+  margin: 10px;
+  padding: 7px;
+  width: 7em;
+}
+
+.edit-delete-task:hover {
+  margin: 10px;
+  padding: 7px;
+  width: 7em;
+}
+
+#new-task {
+  padding: 10px;
+  border-radius: 10px;
+  border: 2px solid black;
+  width: 300px;
+}
+
+#edit-task {
+  margin: 20px;
+  border-radius: 10px;
+  text-decoration: none;
+  border: none;
+  padding: 10px;
+  border: 2px solid black;
+  background-color: #eb9f34;
+}
+
+#add-task {
+  margin: 20px;
+  border-radius: 10px;
+  text-decoration: none;
+  border: none;
+  padding: 10px;
+  border: 2px solid black;
+  background-color: #eb9f34;
+}
+
+#add-task:hover {
+  margin: 20px;
+  border-radius: 10px;
+  text-decoration: none;
+  border: none;
+  padding: 10px;
+  border: 2px solid black;
+  background-color: rgb(241, 233, 233);
+}
+
+#clearList {
+  margin-top: 40px;
+}
+
+.task-status {
+  padding: 5px 10px;
+  margin: 5px;
+}
+
+.task-content {
+  padding: 5px 10px;
+  margin: 10px;
+  font-size: medium;
+  width: 150px;
+  overflow: auto;
+}
+.task-date {
+  padding: 5px 10px;
+  margin: 10px;
+  font-size: medium;
+}
+
+.task-list-box {
+  margin: -40px 0;
+}
+
+.task {
+  background-color: rgb(241, 233, 233);
+  border: 2px solid black;
+  border-radius: 10px;
+  margin: auto;
+  margin: 15px auto;
+  max-width: 50%;
+  padding-top: 10px;
+  display: flex;
+  justify-content: center;
+}
+
+.tasks-display {
+  margin-top: 50px;
+}
+
+.error {
+  color: red;
+  font-size: small;
+}
