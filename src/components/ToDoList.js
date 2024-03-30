@@ -38,6 +38,7 @@ export const ToDoList = () => {
   const handleAddNewTask = (event) => {
     event.preventDefault();
     if (!taskValue) {
+      setTaskValue("");
       document.getElementById("new-task").value = "";
       document.getElementById("new-task").focus();
       return;
@@ -139,6 +140,7 @@ export const ToDoList = () => {
       return [];
     });
     setAddOrEdit("Add New Task");
+    setTaskValue("");
     document.getElementById("new-task").value = "";
   };
 
@@ -169,6 +171,7 @@ export const ToDoList = () => {
 
   const handleCanceEdit = () => {
     setAddOrEdit("Add New Task");
+    setTaskValue("");
     document.getElementById("new-task").value = "";
     document.getElementById("new-task").focus();
   };
