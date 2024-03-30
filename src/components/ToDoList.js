@@ -51,6 +51,7 @@ export const ToDoList = () => {
               {
                 id: nanoid(),
                 task: taskValue,
+                displayedDate: moment().format("MMM Do"),
                 date: moment().format("YYYY-MM-DD"),
                 completed: false,
               },
@@ -61,6 +62,7 @@ export const ToDoList = () => {
             {
               id: nanoid(),
               task: taskValue,
+              displayedDate: moment().format("MMM Do"),
               date: moment().format("YYYY-MM-DD"),
               completed: false,
             },
@@ -75,6 +77,7 @@ export const ToDoList = () => {
               {
                 id: nanoid(),
                 task: taskValue,
+                displayedDate: moment().format("MMM Do"),
                 date: moment().format("YYYY-MM-DD"),
                 completed: false,
               },
@@ -84,6 +87,7 @@ export const ToDoList = () => {
             {
               id: nanoid(),
               task: taskValue,
+              displayedDate: moment().format("MMM Do"),
               date: moment().format("YYYY-MM-DD"),
               completed: false,
             },
@@ -236,7 +240,7 @@ export const ToDoList = () => {
             ) : (
               <div className="task-content">{obj.task}</div>
             )}
-            <div className="task-date">{obj.date}</div>
+            <div className="task-date">{obj.displayedDate}</div>
             <button
               onClick={() => handleEditTask(obj.id)}
               className="edit-delete-task"
