@@ -74,7 +74,9 @@ export const ToDoList = () => {
         if (task.id === tempId) {
           document.getElementById("new-task").value = task.task;
           task.task = taskValue;
-          task.category = category;
+          if (category) {
+            task.category = category;
+          }
           const updatedTask = task;
           setAllTasks((prevTasks) => {
             prevTasks.splice(index, 1, updatedTask);
@@ -163,6 +165,7 @@ export const ToDoList = () => {
   const handleFilterChange = (event) => {
     setFilter(event.target.value);
     setAddOrEdit("Add New Task");
+    setCategory("");
     setTaskValue("");
     document.getElementById("new-task").value = "";
     document.getElementById("new-task").focus();
