@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from "react";
 import moment from "moment";
 import { nanoid } from "nanoid";
+// import { Checkbox } from "@material-tailwind/react";
 
 export const ToDoList = () => {
   const [taskValue, setTaskValue] = useState("");
   const [count, setCount] = useState(0);
   const [addOrEdit, setAddOrEdit] = useState("Add New Task");
   const [tempId, setTempId] = useState("");
+  const [category, setCategory] = useState("");
+  const [filter, setFilter] = useState("all");
   const [allTasks, setAllTasks] = useState(
     localStorage.getItem("allTodos") !== null
       ? JSON.parse(localStorage.getItem("allTodos")).sort(
@@ -44,55 +47,26 @@ export const ToDoList = () => {
       return;
     }
     if (addOrEdit === "Add New Task") {
+      const task = {
+        id: nanoid(),
+        task: taskValue,
+        category: !category ? "uncategorized" : category,
+        displayedDate: moment().format("MMM Do"),
+        date: moment().format("YYYY-MM-DD"),
+        completed: false,
+      };
       if (allTasks.length) {
         setAllTasks((prevTasks) => {
           localStorage.setItem(
             "allTodos",
-            JSON.stringify([
-              {
-                id: nanoid(),
-                task: taskValue,
-                displayedDate: moment().format("MMM Do"),
-                date: moment().format("YYYY-MM-DD"),
-                completed: false,
-              },
-              ...prevTasks,
-            ])
+            JSON.stringify([task, ...prevTasks])
           );
-          return [
-            {
-              id: nanoid(),
-              task: taskValue,
-              displayedDate: moment().format("MMM Do"),
-              date: moment().format("YYYY-MM-DD"),
-              completed: false,
-            },
-            ...prevTasks,
-          ];
+          return [task, ...prevTasks];
         });
       } else {
         setAllTasks(() => {
-          localStorage.setItem(
-            "allTodos",
-            JSON.stringify([
-              {
-                id: nanoid(),
-                task: taskValue,
-                displayedDate: moment().format("MMM Do"),
-                date: moment().format("YYYY-MM-DD"),
-                completed: false,
-              },
-            ])
-          );
-          return [
-            {
-              id: nanoid(),
-              task: taskValue,
-              displayedDate: moment().format("MMM Do"),
-              date: moment().format("YYYY-MM-DD"),
-              completed: false,
-            },
-          ];
+          localStorage.setItem("allTodos", JSON.stringify([task]));
+          return [task];
         });
       }
     } else {
@@ -100,6 +74,7 @@ export const ToDoList = () => {
         if (task.id === tempId) {
           document.getElementById("new-task").value = task.task;
           task.task = taskValue;
+          task.category = category;
           const updatedTask = task;
           setAllTasks((prevTasks) => {
             prevTasks.splice(index, 1, updatedTask);
@@ -113,6 +88,7 @@ export const ToDoList = () => {
       });
     }
     setAddOrEdit("Add New Task");
+    setCategory("");
     setTaskValue("");
     document.getElementById("new-task").value = "";
   };
@@ -135,13 +111,17 @@ export const ToDoList = () => {
   };
 
   const handleClearList = () => {
-    setAllTasks(() => {
-      localStorage.removeItem("allTodos");
-      return [];
-    });
-    setAddOrEdit("Add New Task");
-    setTaskValue("");
-    document.getElementById("new-task").value = "";
+    if (window.confirm("Are you sure?")) {
+      setAllTasks(() => {
+        localStorage.removeItem("allTodos");
+        return [];
+      });
+      setAddOrEdit("Add New Task");
+      setCategory("");
+      setFilter("all");
+      setTaskValue("");
+      document.getElementById("new-task").value = "";
+    }
   };
 
   const handleEditTask = (taskId) => {
@@ -149,7 +129,7 @@ export const ToDoList = () => {
       if (taskId === task.id) {
         document.getElementById("new-task").value = task.task;
         setTaskValue(task.task);
-        setAddOrEdit("Edit Task");
+        setAddOrEdit("Done");
         setTempId(taskId);
         return true;
       }
@@ -176,58 +156,62 @@ export const ToDoList = () => {
     document.getElementById("new-task").focus();
   };
 
-  return !allTasks.length ? (
-    <form onSubmit={handleAddNewTask}>
-      <input
-        autoComplete="off"
-        autoFocus={true}
-        onChange={handleTaskValueChange}
-        id="new-task"
-        placeholder={
-          addOrEdit === "Add New Task"
-            ? "Enter new task..."
-            : "Edit Your Task..."
-        }
-        type="text"
-      />
+  const handleCategoryChange = (event) => {
+    setCategory(event.target.value);
+  };
 
-      <button id="add-task" type="submit">
-        {addOrEdit}
-      </button>
-      {addOrEdit === "Edit Task" && (
-        <button style={{ marginLeft: 0 }} onClick={handleCanceEdit}>
-          Cancel Edit
-        </button>
-      )}
-      <h5>No pending tasks!</h5>
-    </form>
-  ) : (
-    <div>
-      <form onSubmit={handleAddNewTask}>
-        <input
-          autoComplete="off"
-          autoFocus={true}
-          onChange={handleTaskValueChange}
-          id="new-task"
-          placeholder={
-            addOrEdit === "Add New Task"
-              ? "Enter new task..."
-              : "Edit Your Task..."
-          }
-          type="text"
-        />
-        <button id="add-task" type="submit">
-          {addOrEdit}
-        </button>
-        {addOrEdit === "Edit Task" && (
-          <button style={{ marginLeft: 0 }} onClick={handleCanceEdit}>
-            Cancel Edit
+  const handleFilterChange = (event) => {
+    setFilter(event.target.value);
+    setAddOrEdit("Add New Task");
+    setTaskValue("");
+    document.getElementById("new-task").value = "";
+    document.getElementById("new-task").focus();
+  };
+
+  const buildTasks = () => {
+    if (filter === "all") {
+      return allTasks.map((obj) => (
+        <div className="task" key={obj.id}>
+          <div className="task-status">
+            <input
+              onChange={() => handleStatusChange(obj.id)}
+              checked={obj.completed}
+              type="checkbox"
+            />
+            {/* <Checkbox
+                onChange={() => handleStatusChange(obj.id)}
+                checked={obj.completed}
+                ripple={true}
+                className="h-8 w-8 rounded-full border-gray-900/20 bg-gray-900/10 transition-all hover:scale-105 hover:before:opacity-0"
+              /> */}
+          </div>
+          {obj.completed ? (
+            <s>
+              <div className="task-content">{obj.task}</div>
+            </s>
+          ) : (
+            <div className="task-content">{obj.task}</div>
+          )}
+          <div className="task-date">{obj.displayedDate}</div>
+          <button
+            id="edit-task"
+            onClick={() => handleEditTask(obj.id)}
+            className="edit-delete-task"
+          >
+            Edit
           </button>
-        )}
-      </form>
-      {allTasks.length && <button onClick={handleClearList}>Clear List</button>}
-      <div className="tasks-display">
-        {allTasks.map((obj) => (
+          <button
+            onClick={() => handleDeleteTask(obj.id)}
+            className="edit-delete-task"
+          >
+            Delete
+          </button>
+        </div>
+      ));
+    } else {
+      const filteredTasks = allTasks.filter((obj) => obj.category === filter);
+      return filteredTasks.length ? (
+        filteredTasks.map((obj) => (
           <div className="task" key={obj.id}>
             <div className="task-status">
               <input
@@ -235,6 +219,12 @@ export const ToDoList = () => {
                 checked={obj.completed}
                 type="checkbox"
               />
+              {/* <Checkbox
+            onChange={() => handleStatusChange(obj.id)}
+            checked={obj.completed}
+            ripple={true}
+            className="h-8 w-8 rounded-full border-gray-900/20 bg-gray-900/10 transition-all hover:scale-105 hover:before:opacity-0"
+          /> */}
             </div>
             {obj.completed ? (
               <s>
@@ -245,19 +235,124 @@ export const ToDoList = () => {
             )}
             <div className="task-date">{obj.displayedDate}</div>
             <button
+              id="edit-task"
               onClick={() => handleEditTask(obj.id)}
               className="edit-delete-task"
             >
-              Edit Task
+              Edit
             </button>
             <button
               onClick={() => handleDeleteTask(obj.id)}
               className="edit-delete-task"
             >
-              Delete Task
+              Delete
             </button>
           </div>
-        ))}
+        ))
+      ) : (
+        <h5>No {filter} tasks!</h5>
+      );
+    }
+  };
+
+  return !allTasks.length ? (
+    <div className="container">
+      <form onSubmit={handleAddNewTask}>
+        <div className="form-container">
+          <input
+            autoComplete="off"
+            autoFocus={true}
+            onChange={handleTaskValueChange}
+            id="new-task"
+            placeholder={
+              addOrEdit === "Add New Task"
+                ? "Enter new task..."
+                : "Edit Your Task..."
+            }
+            type="text"
+          />
+          <button id="add-task" type="submit">
+            {addOrEdit}
+          </button>
+          <div className="task-category">
+            <select
+              value={category}
+              onChange={handleCategoryChange}
+              name="choose-category"
+              id="choose-category"
+            >
+              <option value="">--Choose Category--</option>
+              <option value="home">Home</option>
+              <option value="work">Work</option>
+              <option value="casual">Casual</option>
+            </select>
+          </div>
+        </div>
+      </form>
+      <h5>No pending tasks!</h5>
+    </div>
+  ) : (
+    <div className="container">
+      <form onSubmit={handleAddNewTask}>
+        <div className="form-container">
+          <input
+            autoComplete="off"
+            autoFocus={true}
+            onChange={handleTaskValueChange}
+            id="new-task"
+            placeholder={
+              addOrEdit === "Add New Task"
+                ? "Enter new task..."
+                : "Edit Your Task..."
+            }
+            type="text"
+          />
+          <button id="add-task" type="submit">
+            {addOrEdit}
+          </button>
+          {addOrEdit === "Done" && (
+            <button style={{ marginLeft: 0 }} onClick={handleCanceEdit}>
+              Cancel
+            </button>
+          )}
+          <div>
+            <select
+              value={category}
+              onChange={handleCategoryChange}
+              name="choose-category"
+              id="choose-category"
+            >
+              <option value="">--Choose Category--</option>
+              <option value="home">Home</option>
+              <option value="work">Work</option>
+              <option value="casual">Casual</option>
+            </select>
+          </div>
+        </div>
+      </form>
+      <div className="tasks-display">
+        <div className="clear-and-filter">
+          <div className="task-category">
+            <select
+              value={filter}
+              onChange={handleFilterChange}
+              name="filter-category"
+              id="filter-category"
+            >
+              <option value="all">All</option>
+              <option value="home">Home</option>
+              <option value="work">Work</option>
+              <option value="casual">Casual</option>
+              <option value="uncategorized">Uncategorized</option>
+            </select>
+          </div>
+          {allTasks.length && (
+            <button id="clear-list" onClick={handleClearList}>
+              Clear List
+            </button>
+          )}
+        </div>
+        {buildTasks()}
       </div>
     </div>
   );
