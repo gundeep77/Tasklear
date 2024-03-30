@@ -4,11 +4,11 @@ import { ToDoList } from "./components/ToDoList";
 
 function App() {
   return (
-    <div style={{ marginTop: "50px" }}>
-      <h1 style={{fontFamily: "fantasy"}}>
-        Welcome to <span style={{ color: "#4f5ce3" }}>Tasklear</span>
+    <div className="app">
+      <h1 className="heading">
+        Welcome to <span className="app-name">Tasklear</span>
       </h1>
-      <p style={{ paddingBottom: "20px", fontWeight: "bold" }}>Manage your tasks on the go!</p>
+      <p className="sub-heading">Manage your tasks on the go!</p>
       <ToDoList />
     </div>
   );
