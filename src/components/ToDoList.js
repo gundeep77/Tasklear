@@ -44,6 +44,7 @@ export const ToDoList = () => {
     if (!taskValue) {
       setTaskValue("");
       inputRef.current.focus();
+
       return;
     }
     if (addOrEdit === "Add New Task") {
@@ -272,9 +273,6 @@ export const ToDoList = () => {
             }
             type="text"
           />
-          <button id="add-task" type="submit">
-            {addOrEdit}
-          </button>
           <div className="task-category">
             <select
               value={category}
@@ -288,6 +286,9 @@ export const ToDoList = () => {
               <option value="casual">Casual</option>
             </select>
           </div>
+          <button id="add-task" type="submit">
+            {addOrEdit}
+          </button>
         </div>
       </form>
       <h5>No pending tasks!</h5>
@@ -310,6 +311,23 @@ export const ToDoList = () => {
             }
             type="text"
           />
+          <div>
+            <select
+              value={category}
+              onChange={handleCategoryChange}
+              name="choose-category"
+              id="choose-category"
+            >
+              <option value="">
+                {addOrEdit === "Done"
+                  ? "--Edit Category--"
+                  : "--Choose Category--"}
+              </option>
+              <option value="home">Home</option>
+              <option value="work">Work</option>
+              <option value="casual">Casual</option>
+            </select>
+          </div>
           <button id="add-task" type="submit">
             {addOrEdit}
           </button>
@@ -318,19 +336,6 @@ export const ToDoList = () => {
               Cancel
             </button>
           )}
-          <div>
-            <select
-              value={category}
-              onChange={handleCategoryChange}
-              name="choose-category"
-              id="choose-category"
-            >
-              <option value="">--Choose Category--</option>
-              <option value="home">Home</option>
-              <option value="work">Work</option>
-              <option value="casual">Casual</option>
-            </select>
-          </div>
         </div>
       </form>
       <div className="tasks-display">
@@ -349,10 +354,13 @@ export const ToDoList = () => {
               <option value="uncategorized">Uncategorized</option>
             </select>
           </div>
+
           {allTasks.length && (
-            <button id="clear-list" onClick={handleClearList}>
-              Clear List
-            </button>
+            <div className="clear-list">
+              <button id="clear-list" onClick={handleClearList}>
+                Clear List
+              </button>
+            </div>
           )}
         </div>
         {buildTasks()}
