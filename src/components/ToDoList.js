@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import moment from "moment";
 import { nanoid } from "nanoid";
 // import { Checkbox } from "@material-tailwind/react";
@@ -10,6 +10,7 @@ export const ToDoList = () => {
   const [tempId, setTempId] = useState("");
   const [category, setCategory] = useState("");
   const [filter, setFilter] = useState("all");
+  const inputRef = useRef();
   const [allTasks, setAllTasks] = useState(
     localStorage.getItem("allTodos") !== null
       ? JSON.parse(localStorage.getItem("allTodos")).sort(
@@ -32,7 +33,7 @@ export const ToDoList = () => {
   }, [count]);
   const handleTaskValueChange = (event) => {
     if (event.target.value.trim().length) {
-      setTaskValue(event.target.value.trim());
+      setTaskValue(event.target.value);
     } else {
       setTaskValue("");
     }
@@ -42,14 +43,13 @@ export const ToDoList = () => {
     event.preventDefault();
     if (!taskValue) {
       setTaskValue("");
-      document.getElementById("new-task").value = "";
-      document.getElementById("new-task").focus();
+      inputRef.current.focus();
       return;
     }
     if (addOrEdit === "Add New Task") {
       const task = {
         id: nanoid(),
-        task: taskValue,
+        task: taskValue.trim(),
         category: !category ? "uncategorized" : category,
         displayedDate: moment().format("MMM Do"),
         date: moment().format("YYYY-MM-DD"),
@@ -72,8 +72,7 @@ export const ToDoList = () => {
     } else {
       allTasks.some((task, index) => {
         if (task.id === tempId) {
-          document.getElementById("new-task").value = task.task;
-          task.task = taskValue;
+          task.task = taskValue.trim();
           if (category) {
             task.category = category;
           }
@@ -92,7 +91,6 @@ export const ToDoList = () => {
     setAddOrEdit("Add New Task");
     setCategory("");
     setTaskValue("");
-    document.getElementById("new-task").value = "";
   };
 
   const handleStatusChange = (taskId) => {
@@ -122,14 +120,13 @@ export const ToDoList = () => {
       setCategory("");
       setFilter("all");
       setTaskValue("");
-      document.getElementById("new-task").value = "";
+      inputRef.current.focus();
     }
   };
 
   const handleEditTask = (taskId) => {
     allTasks.some((task) => {
       if (taskId === task.id) {
-        document.getElementById("new-task").value = task.task;
         setTaskValue(task.task);
         setAddOrEdit("Done");
         setTempId(taskId);
@@ -137,7 +134,7 @@ export const ToDoList = () => {
       }
       return false;
     });
-    document.getElementById("new-task").focus();
+    inputRef.current.focus();
   };
 
   const handleDeleteTask = (taskId) => {
@@ -148,18 +145,18 @@ export const ToDoList = () => {
     });
     setCount((prevCount) => prevCount + 1);
     setAddOrEdit("Add New Task");
-    document.getElementById("new-task").focus();
+    inputRef.current.focus();
   };
 
   const handleCanceEdit = () => {
     setAddOrEdit("Add New Task");
     setTaskValue("");
-    document.getElementById("new-task").value = "";
-    document.getElementById("new-task").focus();
+    inputRef.current.focus();
   };
 
   const handleCategoryChange = (event) => {
     setCategory(event.target.value);
+    inputRef.current.focus();
   };
 
   const handleFilterChange = (event) => {
@@ -167,8 +164,7 @@ export const ToDoList = () => {
     setAddOrEdit("Add New Task");
     setCategory("");
     setTaskValue("");
-    document.getElementById("new-task").value = "";
-    document.getElementById("new-task").focus();
+    inputRef.current.focus();
   };
 
   const buildTasks = () => {
@@ -263,10 +259,12 @@ export const ToDoList = () => {
       <form onSubmit={handleAddNewTask}>
         <div className="form-container">
           <input
+            ref={inputRef}
             autoComplete="off"
-            autoFocus={true}
+            autoFocus
             onChange={handleTaskValueChange}
             id="new-task"
+            value={taskValue}
             placeholder={
               addOrEdit === "Add New Task"
                 ? "Enter new task..."
@@ -299,10 +297,12 @@ export const ToDoList = () => {
       <form onSubmit={handleAddNewTask}>
         <div className="form-container">
           <input
+            ref={inputRef}
             autoComplete="off"
-            autoFocus={true}
+            autoFocus
             onChange={handleTaskValueChange}
             id="new-task"
+            value={taskValue}
             placeholder={
               addOrEdit === "Add New Task"
                 ? "Enter new task..."
