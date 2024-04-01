@@ -98,7 +98,6 @@ button:hover {
 
 .task {
   box-shadow: 3px 3px;
-  /* border: 1.5px solid black; */
   border-radius: 10px;
   margin: 15px auto;
   max-width: 80%;
@@ -157,7 +156,7 @@ button:hover {
   margin-bottom: 50px;
   padding-top: 30px;
   /* background: linear-gradient(#596164, #868F96); */
-  background: linear-gradient(#09203F, #325570);
+  background: linear-gradient(#09203f, #325570);
 }
 
 .form-container {
@@ -199,8 +198,6 @@ button:hover {
   border: none;
   padding: 10px;
   border: 1.5px solid transparent;
-  background-color: rgb(79, 92, 227);
-  transition: background-color 0.2s ease;
   color: white;
   cursor: pointer;
 }

@@ -175,7 +175,7 @@ export const ToDoList = () => {
   };
 
   const showCompletedColor = {
-    backgroundColor: completedIsBlue ? "rgb(79, 92, 227)" : "rgb(57, 169, 59)",
+    backgroundColor: completedIsBlue ? "rgb(60, 74, 226)" : "rgb(57, 169, 59)",
   };
   const handleCompleted = () => {
     setCompletedIsBlue((prevState) => {
