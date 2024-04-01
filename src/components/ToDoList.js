@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import moment from "moment";
 import { nanoid } from "nanoid";
-// import { Checkbox } from "@material-tailwind/react";
 
 export const ToDoList = () => {
   const [taskValue, setTaskValue] = useState("");
@@ -186,7 +185,7 @@ export const ToDoList = () => {
     inputRef.current.focus();
   };
 
-  const buildTasks = () => {
+  const buildTask = () => {
     if (filter === "all") {
       return completedIsBlue
         ? allTasks.map((obj) => {
@@ -199,12 +198,6 @@ export const ToDoList = () => {
                       checked={obj.completed}
                       type="checkbox"
                     />
-                    {/* <Checkbox
-                onChange={() => handleStatusChange(obj.id)}
-                checked={obj.completed}
-                ripple={true}
-                className="h-8 w-8 rounded-full border-gray-900/20 bg-gray-900/10 transition-all hover:scale-105 hover:before:opacity-0"
-              /> */}
                   </div>
                   {obj.completed ? (
                     <s>
@@ -241,12 +234,6 @@ export const ToDoList = () => {
                     checked={obj.completed}
                     type="checkbox"
                   />
-                  {/* <Checkbox
-                onChange={() => handleStatusChange(obj.id)}
-                checked={obj.completed}
-                ripple={true}
-                className="h-8 w-8 rounded-full border-gray-900/20 bg-gray-900/10 transition-all hover:scale-105 hover:before:opacity-0"
-              /> */}
                 </div>
                 {obj.completed ? (
                   <s>
@@ -286,12 +273,6 @@ export const ToDoList = () => {
                       checked={obj.completed}
                       type="checkbox"
                     />
-                    {/* <Checkbox
-            onChange={() => handleStatusChange(obj.id)}
-            checked={obj.completed}
-            ripple={true}
-            className="h-8 w-8 rounded-full border-gray-900/20 bg-gray-900/10 transition-all hover:scale-105 hover:before:opacity-0"
-          /> */}
                   </div>
                   {obj.completed ? (
                     <s>
@@ -329,12 +310,6 @@ export const ToDoList = () => {
                     checked={obj.completed}
                     type="checkbox"
                   />
-                  {/* <Checkbox
-          onChange={() => handleStatusChange(obj.id)}
-          checked={obj.completed}
-          ripple={true}
-          className="h-8 w-8 rounded-full border-gray-900/20 bg-gray-900/10 transition-all hover:scale-105 hover:before:opacity-0"
-        /> */}
                 </div>
                 {obj.completed ? (
                   <s>
@@ -476,7 +451,6 @@ export const ToDoList = () => {
               >
                 Show Completed
               </button>
-              {/* <ToggleSwitch /> */}
             </div>
           </div>
 
@@ -488,7 +462,7 @@ export const ToDoList = () => {
             </div>
           )}
         </div>
-        {buildTasks()}
+        {buildTask()}
       </div>
     </div>
   );
