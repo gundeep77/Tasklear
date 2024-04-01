@@ -481,8 +481,8 @@ export const ToDoList = () => {
           </div>
 
           {allTasks.length && (
-            <div className="clear-list">
-              <button id="clear-list" onClick={handleClearList}>
+            <div className="clear-all">
+              <button id="clear-all" onClick={handleClearList}>
                 Clear All
               </button>
             </div>

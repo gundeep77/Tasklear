@@ -1,13 +1,7 @@
-html {
-  height: 100%;
-}
 body {
-  /* background: linear-gradient(#e66465, #9198e5); */
   text-align: center;
   font-size: x-large;
-  /* height: 100%; */
-  /* background-repeat: no-repeat; */
-  /* background-attachment: fixed; */
+  background-color: #253948;
 }
 
 button {
@@ -17,7 +11,7 @@ button {
   border: none;
   padding: 10px;
   border: 1.5px solid transparent;
-  background-color: rgb(79, 92, 227);
+  background-color: rgb(60, 74, 226);
   transition: background-color 0.2s ease;
   color: white;
 }
@@ -28,9 +22,9 @@ button:hover {
   text-decoration: none;
   border: none;
   padding: 10px;
-  border: 1.5px solid black;
+  border: 1.5px solid white;
   background-color: transparent;
-  color: black;
+  /* color: black; */
 }
 
 .edit-delete-task {
@@ -38,6 +32,7 @@ button:hover {
   padding: 7px;
   width: 7em;
   height: fit-content;
+  background-color: rgb(60, 74, 226);
 }
 
 .edit-delete-task:hover {
@@ -50,14 +45,15 @@ button:hover {
 #new-task {
   padding: 12px;
   border-radius: 10px;
-  border: 1.5px solid black;
+  border: 1.5px solid white;
   outline: none;
   width: 300px;
   background-color: transparent;
+  color: white;
 }
 
 ::placeholder {
-  color: black;
+  color: white;
   opacity: 0.5;
 }
 
@@ -68,7 +64,7 @@ button:hover {
   border: none;
   padding: 10px;
   border: 1.5px solid transparent;
-  background-color: rgb(79, 92, 227);
+  background-color: rgb(60, 74, 226);
 }
 
 #add-task:hover {
@@ -77,9 +73,8 @@ button:hover {
   text-decoration: none;
   border: none;
   padding: 10px;
-  border: 1.5px solid black;
+  border: 1.5px solid white;
   background-color: transparent;
-  color: black;
 }
 
 .task-status {
@@ -102,8 +97,8 @@ button:hover {
 }
 
 .task {
-  box-shadow: 2px 2px;
-  border: 1.5px solid black;
+  box-shadow: 3px 3px;
+  /* border: 1.5px solid black; */
   border-radius: 10px;
   margin: 15px auto;
   max-width: 80%;
@@ -111,6 +106,8 @@ button:hover {
   padding-bottom: 2px;
   display: flex;
   justify-content: space-between;
+  color: black;
+  background-color: #537895;
 }
 
 .tasks-display {
@@ -124,7 +121,7 @@ button:hover {
   border: none;
   padding: 10px;
   border: 1.5px solid transparent;
-  background-color: rgb(79, 92, 227);
+  background-color: rgb(60, 74, 226);
   transition: background-color 0.2s ease;
   color: white;
   outline: none;
@@ -139,7 +136,7 @@ button:hover {
   border: none;
   padding: 10px;
   border: 1.5px solid transparent;
-  background-color: rgb(79, 92, 227);
+  background-color: rgb(60, 74, 226);
   transition: background-color 0.2s ease;
   color: white;
   outline: none;
@@ -151,16 +148,16 @@ button:hover {
   display: flex;
   flex-direction: column;
   align-items: center;
+  color: rgb(227, 222, 222);
 }
 
 .container {
-  border: 2px solid black;
   border-radius: 10px;
   width: 1000px;
   margin-bottom: 50px;
   padding-top: 30px;
-  /* background-color: rgb(95, 84, 118); */
-  background: linear-gradient(#e66465, #9198e5);
+  /* background: linear-gradient(#596164, #868F96); */
+  background: linear-gradient(#09203F, #325570);
 }
 
 .form-container {
@@ -181,7 +178,7 @@ button:hover {
 }
 
 .app-name {
-  color: rgb(79, 92, 227);
+  color: rgb(79, 92, 255);
 }
 
 .clear-and-filter {
@@ -205,4 +202,15 @@ button:hover {
   background-color: rgb(79, 92, 227);
   transition: background-color 0.2s ease;
   color: white;
+  cursor: pointer;
+}
+
+#clear-all {
+  background-color: rgb(237, 31, 31);
+  cursor: pointer;
+}
+
+#clear-all:hover {
+  border: 1.5px solid transparent;
+  background-color: rgb(237, 31, 31);
 }
