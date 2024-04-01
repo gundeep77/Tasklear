@@ -10,6 +10,11 @@ export const ToDoList = () => {
   const [tempId, setTempId] = useState("");
   const [category, setCategory] = useState("");
   const [filter, setFilter] = useState("all");
+  const [completedIsBlue, setCompletedIsBlue] = useState(
+    localStorage.getItem("completedIsBlue") !== null
+      ? JSON.parse(localStorage.getItem("completedIsBlue"))
+      : true
+  );
   const inputRef = useRef();
   const [allTasks, setAllTasks] = useState(
     localStorage.getItem("allTodos") !== null
@@ -31,6 +36,7 @@ export const ToDoList = () => {
         : []
     );
   }, [count]);
+
   const handleTaskValueChange = (event) => {
     if (event.target.value.trim().length) {
       setTaskValue(event.target.value);
@@ -105,6 +111,7 @@ export const ToDoList = () => {
           return prevTasks;
         });
         setCount((prevCount) => prevCount + 1);
+        inputRef.current.focus();
         return true;
       }
       return false;
@@ -112,7 +119,7 @@ export const ToDoList = () => {
   };
 
   const handleClearList = () => {
-    if (window.confirm("Are you sure?")) {
+    if (window.confirm("Delete all incomplete as well as complete tasks?")) {
       setAllTasks(() => {
         localStorage.removeItem("allTodos");
         return [];
@@ -168,87 +175,192 @@ export const ToDoList = () => {
     inputRef.current.focus();
   };
 
+  const showCompletedColor = {
+    backgroundColor: completedIsBlue ? "rgb(79, 92, 227)" : "rgb(57, 169, 59)",
+  };
+  const handleCompleted = () => {
+    setCompletedIsBlue((prevState) => {
+      localStorage.setItem("completedIsBlue", JSON.stringify(!prevState));
+      return !prevState;
+    });
+    inputRef.current.focus();
+  };
+
   const buildTasks = () => {
     if (filter === "all") {
-      return allTasks.map((obj) => (
-        <div className="task" key={obj.id}>
-          <div className="task-status">
-            <input
-              onChange={() => handleStatusChange(obj.id)}
-              checked={obj.completed}
-              type="checkbox"
-            />
-            {/* <Checkbox
+      return completedIsBlue
+        ? allTasks.map((obj) => {
+            if (!obj.completed) {
+              return (
+                <div className="task" key={obj.id}>
+                  <div className="task-status">
+                    <input
+                      onChange={() => handleStatusChange(obj.id)}
+                      checked={obj.completed}
+                      type="checkbox"
+                    />
+                    {/* <Checkbox
                 onChange={() => handleStatusChange(obj.id)}
                 checked={obj.completed}
                 ripple={true}
                 className="h-8 w-8 rounded-full border-gray-900/20 bg-gray-900/10 transition-all hover:scale-105 hover:before:opacity-0"
               /> */}
-          </div>
-          {obj.completed ? (
-            <s>
-              <div className="task-content">{obj.task}</div>
-            </s>
-          ) : (
-            <div className="task-content">{obj.task}</div>
-          )}
-          <div className="task-date">{obj.displayedDate}</div>
-          <button
-            id="edit-task"
-            onClick={() => handleEditTask(obj.id)}
-            className="edit-delete-task"
-          >
-            Edit
-          </button>
-          <button
-            onClick={() => handleDeleteTask(obj.id)}
-            className="edit-delete-task"
-          >
-            Delete
-          </button>
-        </div>
-      ));
+                  </div>
+                  {obj.completed ? (
+                    <s>
+                      <div className="task-content">{obj.task}</div>
+                    </s>
+                  ) : (
+                    <div className="task-content">{obj.task}</div>
+                  )}
+                  <div className="task-date">{obj.displayedDate}</div>
+                  <button
+                    id="edit-task"
+                    onClick={() => handleEditTask(obj.id)}
+                    className="edit-delete-task"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    onClick={() => handleDeleteTask(obj.id)}
+                    className="edit-delete-task"
+                  >
+                    Delete
+                  </button>
+                </div>
+              );
+            }
+            return null;
+          })
+        : allTasks.map((obj) => {
+            return (
+              <div className="task" key={obj.id}>
+                <div className="task-status">
+                  <input
+                    onChange={() => handleStatusChange(obj.id)}
+                    checked={obj.completed}
+                    type="checkbox"
+                  />
+                  {/* <Checkbox
+                onChange={() => handleStatusChange(obj.id)}
+                checked={obj.completed}
+                ripple={true}
+                className="h-8 w-8 rounded-full border-gray-900/20 bg-gray-900/10 transition-all hover:scale-105 hover:before:opacity-0"
+              /> */}
+                </div>
+                {obj.completed ? (
+                  <s>
+                    <div className="task-content">{obj.task}</div>
+                  </s>
+                ) : (
+                  <div className="task-content">{obj.task}</div>
+                )}
+                <div className="task-date">{obj.displayedDate}</div>
+                <button
+                  id="edit-task"
+                  onClick={() => handleEditTask(obj.id)}
+                  className="edit-delete-task"
+                >
+                  Edit
+                </button>
+                <button
+                  onClick={() => handleDeleteTask(obj.id)}
+                  className="edit-delete-task"
+                >
+                  Delete
+                </button>
+              </div>
+            );
+          });
     } else {
       const filteredTasks = allTasks.filter((obj) => obj.category === filter);
       return filteredTasks.length ? (
-        filteredTasks.map((obj) => (
-          <div className="task" key={obj.id}>
-            <div className="task-status">
-              <input
-                onChange={() => handleStatusChange(obj.id)}
-                checked={obj.completed}
-                type="checkbox"
-              />
-              {/* <Checkbox
+        completedIsBlue ? (
+          filteredTasks.map((obj) => {
+            if (!obj.completed) {
+              return (
+                <div className="task" key={obj.id}>
+                  <div className="task-status">
+                    <input
+                      onChange={() => handleStatusChange(obj.id)}
+                      checked={obj.completed}
+                      type="checkbox"
+                    />
+                    {/* <Checkbox
             onChange={() => handleStatusChange(obj.id)}
             checked={obj.completed}
             ripple={true}
             className="h-8 w-8 rounded-full border-gray-900/20 bg-gray-900/10 transition-all hover:scale-105 hover:before:opacity-0"
           /> */}
-            </div>
-            {obj.completed ? (
-              <s>
-                <div className="task-content">{obj.task}</div>
-              </s>
-            ) : (
-              <div className="task-content">{obj.task}</div>
-            )}
-            <div className="task-date">{obj.displayedDate}</div>
-            <button
-              id="edit-task"
-              onClick={() => handleEditTask(obj.id)}
-              className="edit-delete-task"
-            >
-              Edit
-            </button>
-            <button
-              onClick={() => handleDeleteTask(obj.id)}
-              className="edit-delete-task"
-            >
-              Delete
-            </button>
-          </div>
-        ))
+                  </div>
+                  {obj.completed ? (
+                    <s>
+                      <div className="task-content">{obj.task}</div>
+                    </s>
+                  ) : (
+                    <div className="task-content">{obj.task}</div>
+                  )}
+                  <div className="task-date">{obj.displayedDate}</div>
+                  <button
+                    id="edit-task"
+                    onClick={() => handleEditTask(obj.id)}
+                    className="edit-delete-task"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    onClick={() => handleDeleteTask(obj.id)}
+                    className="edit-delete-task"
+                  >
+                    Delete
+                  </button>
+                </div>
+              );
+            }
+            return null;
+          })
+        ) : (
+          filteredTasks.map((obj) => {
+            return (
+              <div className="task" key={obj.id}>
+                <div className="task-status">
+                  <input
+                    onChange={() => handleStatusChange(obj.id)}
+                    checked={obj.completed}
+                    type="checkbox"
+                  />
+                  {/* <Checkbox
+          onChange={() => handleStatusChange(obj.id)}
+          checked={obj.completed}
+          ripple={true}
+          className="h-8 w-8 rounded-full border-gray-900/20 bg-gray-900/10 transition-all hover:scale-105 hover:before:opacity-0"
+        /> */}
+                </div>
+                {obj.completed ? (
+                  <s>
+                    <div className="task-content">{obj.task}</div>
+                  </s>
+                ) : (
+                  <div className="task-content">{obj.task}</div>
+                )}
+                <div className="task-date">{obj.displayedDate}</div>
+                <button
+                  id="edit-task"
+                  onClick={() => handleEditTask(obj.id)}
+                  className="edit-delete-task"
+                >
+                  Edit
+                </button>
+                <button
+                  onClick={() => handleDeleteTask(obj.id)}
+                  className="edit-delete-task"
+                >
+                  Delete
+                </button>
+              </div>
+            );
+          })
+        )
       ) : (
         <h5>No {filter} tasks!</h5>
       );
@@ -291,7 +403,7 @@ export const ToDoList = () => {
           </button>
         </div>
       </form>
-      <h5>No pending tasks!</h5>
+      <h5>Nothing yet!</h5>
     </div>
   ) : (
     <div className="container">
@@ -340,25 +452,38 @@ export const ToDoList = () => {
       </form>
       <div className="tasks-display">
         <div className="clear-and-filter">
-          <div className="task-category">
-            <select
-              value={filter}
-              onChange={handleFilterChange}
-              name="filter-category"
-              id="filter-category"
-            >
-              <option value="all">All</option>
-              <option value="home">Home</option>
-              <option value="work">Work</option>
-              <option value="casual">Casual</option>
-              <option value="uncategorized">Uncategorized</option>
-            </select>
+          <div style={{ display: "flex" }}>
+            <div className="task-category">
+              <select
+                value={filter}
+                onChange={handleFilterChange}
+                name="filter-category"
+                id="filter-category"
+              >
+                <option value="all">All</option>
+                <option value="home">Home</option>
+                <option value="work">Work</option>
+                <option value="casual">Casual</option>
+                <option value="uncategorized">Uncategorized</option>
+              </select>
+            </div>
+
+            <div>
+              <button
+                id="show-completed"
+                style={showCompletedColor}
+                onClick={handleCompleted}
+              >
+                Show Completed
+              </button>
+              {/* <ToggleSwitch /> */}
+            </div>
           </div>
 
           {allTasks.length && (
             <div className="clear-list">
               <button id="clear-list" onClick={handleClearList}>
-                Clear List
+                Clear All
               </button>
             </div>
           )}

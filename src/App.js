@@ -8,7 +8,7 @@ function App() {
       <h1 className="heading">
         Welcome to <span className="app-name">Tasklear</span>
       </h1>
-      <p className="sub-heading">Manage your tasks on the go!</p>
+      <p className="sub-heading">Manage tasks on the go!</p>
       <ToDoList />
     </div>
   );
