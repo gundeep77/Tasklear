@@ -8,33 +8,46 @@ export const ToDoList = () => {
   const [addOrEdit, setAddOrEdit] = useState("Add New Task");
   const [tempId, setTempId] = useState("");
   const [category, setCategory] = useState("");
-  const [filter, setFilter] = useState("all");
+  const [highPriority, setHighPriority] = useState(false);
+  const inputRef = useRef();
+  const [filter, setFilter] = useState(
+    localStorage.getItem("filter") !== null
+      ? JSON.parse(localStorage.getItem("filter"))
+      : "all"
+  );
+  const [sortParameter, setSortParameter] = useState(
+    localStorage.getItem("sortParam") !== null
+      ? JSON.parse(localStorage.getItem("sortParam"))
+      : "most recent"
+  );
+  // const [filter, setFilter] = useState("all");
+  // const [sortParameter, setSortParameter] = useState("most recent");
   const [completedIsBlue, setCompletedIsBlue] = useState(
     localStorage.getItem("completedIsBlue") !== null
       ? JSON.parse(localStorage.getItem("completedIsBlue"))
       : true
   );
-  const inputRef = useRef();
   const [allTasks, setAllTasks] = useState(
     localStorage.getItem("allTodos") !== null
       ? JSON.parse(localStorage.getItem("allTodos")).sort(
-          (a, b) =>
-            new moment(b.date).format("YYYYMMDD") -
-            new moment(a.date).format("YYYYMMDD")
+          (a, b) => b.dateTime - a.dateTime
         )
       : []
   );
   useEffect(() => {
+    const sortingFunction = (arr, sortParam) => {
+      arr.sort((a, b) => b[sortParam] - a[sortParam]);
+      return arr;
+    };
     setAllTasks(
       localStorage.getItem("allTodos") !== null
-        ? JSON.parse(localStorage.getItem("allTodos")).sort(
-            (a, b) =>
-              new moment(b.date).format("YYYYMMDD") -
-              new moment(a.date).format("YYYYMMDD")
+        ? sortingFunction(
+            JSON.parse(localStorage.getItem("allTodos")),
+            sortParameter === "most recent" ? "dateTime" : "highPriority"
           )
         : []
     );
-  }, [count]);
+  }, [count, sortParameter]);
 
   const handleTaskValueChange = (event) => {
     if (event.target.value.trim().length) {
@@ -56,10 +69,11 @@ export const ToDoList = () => {
       const task = {
         id: nanoid(),
         task: taskValue.trim(),
+        highPriority: highPriority,
         category: !category ? "uncategorized" : category,
         displayedDate: moment().format("MM/DD/YYYY"),
         displayedTime: moment().format("h:mm A"),
-        dateTime: moment().format("YYYY-MM-DDTHH:mm:ss"),
+        dateTime: moment().format("YYYY-MM-DDTh:mm A"),
         completed: false,
       };
       if (allTasks.length) {
@@ -78,11 +92,13 @@ export const ToDoList = () => {
       }
     } else {
       allTasks.some((task, index) => {
+        setHighPriority(task.highPriority);
         if (task.id === tempId) {
           task.task = taskValue.trim();
           if (category) {
             task.category = category;
           }
+          task.highPriority = highPriority;
           const updatedTask = task;
           setAllTasks((prevTasks) => {
             prevTasks.splice(index, 1, updatedTask);
@@ -98,6 +114,7 @@ export const ToDoList = () => {
     setAddOrEdit("Add New Task");
     setCategory("");
     setTaskValue("");
+    setHighPriority(false);
   };
 
   const handleStatusChange = (taskId) => {
@@ -122,6 +139,9 @@ export const ToDoList = () => {
     if (window.confirm("Delete all incomplete as well as complete tasks?")) {
       setAllTasks(() => {
         localStorage.removeItem("allTodos");
+        localStorage.removeItem("completedIsBlue");
+        localStorage.removeItem("sortParam");
+        localStorage.removeItem("filter");
         return [];
       });
       setAddOrEdit("Add New Task");
@@ -149,6 +169,8 @@ export const ToDoList = () => {
         setTaskValue(task.task);
         setAddOrEdit("Done");
         setTempId(taskId);
+        setHighPriority(task.highPriority);
+        setCategory(task.category);
         return true;
       }
       return false;
@@ -170,6 +192,7 @@ export const ToDoList = () => {
   const handleCanceEdit = () => {
     setAddOrEdit("Add New Task");
     setTaskValue("");
+    setHighPriority(false);
     inputRef.current.focus();
   };
 
@@ -179,10 +202,14 @@ export const ToDoList = () => {
   };
 
   const handleFilterChange = (event) => {
-    setFilter(event.target.value);
+    localStorage.setItem("filter", JSON.stringify(event.target.value));
+    setFilter(() => {
+      return event.target.value;
+    });
     setAddOrEdit("Add New Task");
     setCategory("");
     setTaskValue("");
+    setHighPriority(false);
     inputRef.current.focus();
   };
 
@@ -197,6 +224,23 @@ export const ToDoList = () => {
     inputRef.current.focus();
   };
 
+  const handleSortTasks = (event) => {
+    setSortParameter(() => {
+      localStorage.setItem("sortParam", JSON.stringify(event.target.value));
+      return event.target.value;
+    });
+    setAddOrEdit("Add New Task");
+    setCategory("");
+    setTaskValue("");
+    setHighPriority(false);
+    inputRef.current.focus();
+  };
+
+  const handlePriority = () => {
+    setHighPriority((prevState) => !prevState);
+    inputRef.current.focus();
+  };
+
   const buildTask = () => {
     if (filter === "all") {
       return completedIsBlue
@@ -204,6 +248,64 @@ export const ToDoList = () => {
             if (!obj.completed) {
               return (
                 <div className="task" key={obj.id}>
+                  <div className="status-content-container">
+                    <div className="task-status">
+                      <input
+                        id="task-status"
+                        onChange={() => handleStatusChange(obj.id)}
+                        checked={obj.completed}
+                        type="checkbox"
+                      />
+                    </div>
+                    <div className="task-date-container">
+                      <div
+                        style={{
+                          textDecoration: obj.completed && "line-through",
+                        }}
+                        className="task-content"
+                      >
+                        {obj.task}
+                      </div>
+
+                      <div className="task-date">{`${obj.displayedTime}, ${obj.displayedDate}`}</div>
+                    </div>
+                  </div>
+                  <div id="priority-image">
+                    {obj.highPriority && (
+                      <img
+                        alt="high-priority-task"
+                        src="high-priority.png"
+                        height={25}
+                        width={25}
+                        style={{ filter: "invert(0.1)" }}
+                      />
+                    )}
+                  </div>
+                  <div className="edit-delete-container">
+                    <button
+                      id="edit-task"
+                      onClick={() => handleEditTask(obj.id)}
+                      className="edit-delete"
+                    >
+                      Edit
+                    </button>
+                    <button
+                      id="delete-task"
+                      onClick={() => handleDeleteTask(obj.id)}
+                      className="edit-delete"
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </div>
+              );
+            }
+            return null;
+          })
+        : allTasks.map((obj) => {
+            return (
+              <div className="task" key={obj.id}>
+                <div className="status-content-container">
                   <div className="task-status">
                     <input
                       id="task-status"
@@ -224,58 +326,34 @@ export const ToDoList = () => {
 
                     <div className="task-date">{`${obj.displayedTime}, ${obj.displayedDate}`}</div>
                   </div>
+                </div>
+                <div id="priority-image">
+                  {obj.highPriority && (
+                    <img
+                      alt="high-priority-task"
+                      src="high-priority.png"
+                      height={25}
+                      width={25}
+                      style={{ filter: "invert(0.1)" }}
+                    />
+                  )}
+                </div>
+                <div className="edit-delete-container">
                   <button
                     id="edit-task"
                     onClick={() => handleEditTask(obj.id)}
-                    className="edit-delete-container"
+                    className="edit-delete"
                   >
                     Edit
                   </button>
                   <button
+                    id="delete-task"
                     onClick={() => handleDeleteTask(obj.id)}
-                    className="edit-delete-container"
+                    className="edit-delete"
                   >
                     Delete
                   </button>
                 </div>
-              );
-            }
-            return null;
-          })
-        : allTasks.map((obj) => {
-            return (
-              <div className="task" key={obj.id}>
-                <div className="task-status">
-                  <input
-                    id="task-status"
-                    onChange={() => handleStatusChange(obj.id)}
-                    checked={obj.completed}
-                    type="checkbox"
-                  />
-                </div>
-                <div className="task-date-container">
-                  <div
-                    style={{ textDecoration: obj.completed && "line-through" }}
-                    className="task-content"
-                  >
-                    {obj.task}
-                  </div>
-
-                  <div className="task-date">{`${obj.displayedTime}, ${obj.displayedDate}`}</div>
-                </div>
-                <button
-                  id="edit-task"
-                  onClick={() => handleEditTask(obj.id)}
-                  className="edit-delete-container"
-                >
-                  Edit
-                </button>
-                <button
-                  onClick={() => handleDeleteTask(obj.id)}
-                  className="edit-delete-container"
-                >
-                  Delete
-                </button>
               </div>
             );
           });
@@ -287,6 +365,65 @@ export const ToDoList = () => {
             if (!obj.completed) {
               return (
                 <div className="task" key={obj.id}>
+                  <div className="status-content-container">
+                    <div className="task-status">
+                      <input
+                        id="task-status"
+                        onChange={() => handleStatusChange(obj.id)}
+                        checked={obj.completed}
+                        type="checkbox"
+                      />
+                    </div>
+                    <div className="task-date-container">
+                      <div
+                        style={{
+                          textDecoration: obj.completed && "line-through",
+                        }}
+                        className="task-content"
+                      >
+                        {obj.task}
+                      </div>
+
+                      <div className="task-date">{`${obj.displayedTime}, ${obj.displayedDate}`}</div>
+                    </div>
+                  </div>
+                  <div id="priority-image">
+                    {obj.highPriority && (
+                      <img
+                        alt="high-priority-task"
+                        src="high-priority.png"
+                        height={25}
+                        width={25}
+                        style={{ filter: "invert(0.1)" }}
+                      />
+                    )}
+                  </div>
+                  <div className="edit-delete-container">
+                    <button
+                      id="edit-task"
+                      onClick={() => handleEditTask(obj.id)}
+                      className="edit-delete"
+                    >
+                      Edit
+                    </button>
+                    <button
+                      id="delete-task"
+                      onClick={() => handleDeleteTask(obj.id)}
+                      className="edit-delete"
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </div>
+              );
+            }
+            return null;
+          })
+        ) : (
+          filteredTasks.map((obj) => {
+            return (
+              <div className="task" key={obj.id}>
+                <div className="status-content-container">
                   <div className="task-status">
                     <input
                       id="task-status"
@@ -307,59 +444,34 @@ export const ToDoList = () => {
 
                     <div className="task-date">{`${obj.displayedTime}, ${obj.displayedDate}`}</div>
                   </div>
+                </div>
+                <div id="priority-image">
+                  {obj.highPriority && (
+                    <img
+                      alt="high-priority-task"
+                      src="high-priority.png"
+                      height={25}
+                      width={25}
+                      style={{ filter: "invert(0.1)" }}
+                    />
+                  )}
+                </div>
+                <div className="edit-delete-container">
                   <button
                     id="edit-task"
                     onClick={() => handleEditTask(obj.id)}
-                    className="edit-delete-container"
+                    className="edit-delete"
                   >
                     Edit
                   </button>
                   <button
+                    id="delete-task"
                     onClick={() => handleDeleteTask(obj.id)}
-                    className="edit-delete-container"
+                    className="edit-delete"
                   >
                     Delete
                   </button>
                 </div>
-              );
-            }
-            return null;
-          })
-        ) : (
-          filteredTasks.map((obj) => {
-            return (
-              <div className="task" key={obj.id}>
-                <div className="task-status">
-                  <input
-                    id="task-status"
-                    onChange={() => handleStatusChange(obj.id)}
-                    checked={obj.completed}
-                    type="checkbox"
-                  />
-                </div>
-                <div className="task-date-container">
-                  <div
-                    style={{ textDecoration: obj.completed && "line-through" }}
-                    className="task-content"
-                  >
-                    {obj.task}
-                  </div>
-
-                  <div className="task-date">{`${obj.displayedTime}, ${obj.displayedDate}`}</div>
-                </div>
-                <button
-                  id="edit-task"
-                  onClick={() => handleEditTask(obj.id)}
-                  className="edit-delete-container"
-                >
-                  Edit
-                </button>
-                <button
-                  onClick={() => handleDeleteTask(obj.id)}
-                  className="edit-delete-container"
-                >
-                  Delete
-                </button>
               </div>
             );
           })
@@ -401,6 +513,16 @@ export const ToDoList = () => {
               <option value="casual">Casual</option>
             </select>
           </div>
+          <label className="high-priority-label" htmlFor="high-priority">
+            High Priority?
+          </label>
+          <input
+            id="high-priority"
+            className="high-priority"
+            type="checkbox"
+            checked={highPriority}
+            onChange={handlePriority}
+          />
           <button id="add-task" type="submit">
             {addOrEdit}
           </button>
@@ -433,16 +555,22 @@ export const ToDoList = () => {
               name="choose-category"
               id="choose-category"
             >
-              <option value="">
-                {addOrEdit === "Done"
-                  ? "--Edit Category--"
-                  : "--Choose Category--"}
-              </option>
+              <option value="">--Choose Category--</option>
               <option value="home">Home</option>
               <option value="work">Work</option>
               <option value="casual">Casual</option>
             </select>
           </div>
+          <label className="high-priority-label" htmlFor="high-priority">
+            High Priority?
+          </label>
+          <input
+            id="high-priority"
+            className="high-priority"
+            type="checkbox"
+            checked={highPriority}
+            onChange={handlePriority}
+          />
           <button id="add-task" type="submit">
             {addOrEdit}
           </button>
@@ -453,9 +581,9 @@ export const ToDoList = () => {
           )}
         </div>
       </form>
-      <div className="tasks-display">
+      <div>
         <div className="clear-filter-container">
-          <div style={{ display: "flex" }}>
+          <div className="filter-sort-container">
             <div className="task-category">
               <select
                 value={filter}
@@ -463,38 +591,48 @@ export const ToDoList = () => {
                 name="filter-category"
                 id="filter-category"
               >
-                <option value="all">All</option>
+                <option value="all">All Tasks</option>
                 <option value="home">Home</option>
                 <option value="work">Work</option>
                 <option value="casual">Casual</option>
                 <option value="uncategorized">Uncategorized</option>
               </select>
             </div>
-
-            <div>
-              <button
-                id="show-completed"
-                style={showCompletedColor}
-                onClick={handleCompleted}
+            <div className="sort-tasks">
+              <select
+                value={sortParameter}
+                onChange={handleSortTasks}
+                name="sort-task"
+                id="sort-tasks"
               >
-                Show Completed
-              </button>
+                <option value="most recent">Most Recent</option>
+                <option value="priority">Priority</option>
+              </select>
             </div>
           </div>
-          <div style={{ display: "flex" }}>
-            <div>
-              <button id="delete-completed" onClick={handleDeleteCompleted}>
-                Delete Completed
-              </button>
-            </div>
-            <div>
-              <button id="delete-all" onClick={handleDeleteAll}>
-                Delete All
-              </button>
-            </div>
+          <div>
+            <button
+              id="show-completed"
+              style={showCompletedColor}
+              onClick={handleCompleted}
+            >
+              Show Completed
+            </button>
           </div>
         </div>
         {buildTask()}
+        <div className="delete-completed-container">
+          <div>
+            <button id="delete-completed" onClick={handleDeleteCompleted}>
+              Delete Completed
+            </button>
+          </div>
+          <div>
+            <button id="delete-all" onClick={handleDeleteAll}>
+              Delete All
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   );
