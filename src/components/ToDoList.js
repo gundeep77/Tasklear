@@ -20,8 +20,6 @@ export const ToDoList = () => {
       ? JSON.parse(localStorage.getItem("sortParam"))
       : "most recent"
   );
-  // const [filter, setFilter] = useState("all");
-  // const [sortParameter, setSortParameter] = useState("most recent");
   const [completedIsBlue, setCompletedIsBlue] = useState(
     localStorage.getItem("completedIsBlue") !== null
       ? JSON.parse(localStorage.getItem("completedIsBlue"))
@@ -34,9 +32,33 @@ export const ToDoList = () => {
         )
       : []
   );
+
+  // const taskSuggestions = () => {
+  //   const suggestions = ["Meeting today at 11 AM", "Do laundry tomorrow", ""];
+  //   setInterval(() => {
+  //     for (const suggestion of suggestions) {
+  //     }
+  //   }, 2000);
+  // };
+
   useEffect(() => {
     const sortingFunction = (arr, sortParam) => {
-      arr.sort((a, b) => b[sortParam] - a[sortParam]);
+      if (sortParam === "dateTime") {
+        arr.sort((a, b) => {
+          const dateA = moment(a.dateTime, "YYYY-MM-DDTHH:mm A");
+          const dateB = moment(b.dateTime, "YYYY-MM-DDTHH:mm A");
+
+          if (dateA.isBefore(dateB)) {
+            return 1;
+          } else if (dateA.isAfter(dateB)) {
+            return -1;
+          } else {
+            return 0;
+          }
+        });
+      } else if (sortParam === "highPriority") {
+        arr.sort((a, b) => b.highPriority - a.highPriority);
+      }
       return arr;
     };
     setAllTasks(
@@ -66,7 +88,7 @@ export const ToDoList = () => {
       return;
     }
     if (addOrEdit === "Add New Task") {
-      const task = {
+      const newTask = {
         id: nanoid(),
         task: taskValue.trim(),
         highPriority: highPriority,
@@ -80,14 +102,14 @@ export const ToDoList = () => {
         setAllTasks((prevTasks) => {
           localStorage.setItem(
             "allTodos",
-            JSON.stringify([task, ...prevTasks])
+            JSON.stringify([newTask, ...prevTasks])
           );
-          return [task, ...prevTasks];
+          return [newTask, ...prevTasks];
         });
       } else {
         setAllTasks(() => {
-          localStorage.setItem("allTodos", JSON.stringify([task]));
-          return [task];
+          localStorage.setItem("allTodos", JSON.stringify([newTask]));
+          return [newTask];
         });
       }
     } else {
@@ -184,7 +206,6 @@ export const ToDoList = () => {
       localStorage.setItem("allTodos", JSON.stringify(updatedAllTasks));
       return updatedAllTasks;
     });
-    setCount((prevCount) => prevCount + 1);
     setAddOrEdit("Add New Task");
     inputRef.current.focus();
   };
@@ -202,8 +223,8 @@ export const ToDoList = () => {
   };
 
   const handleFilterChange = (event) => {
-    localStorage.setItem("filter", JSON.stringify(event.target.value));
     setFilter(() => {
+      localStorage.setItem("filter", JSON.stringify(event.target.value));
       return event.target.value;
     });
     setAddOrEdit("Add New Task");
