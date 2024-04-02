@@ -237,7 +237,7 @@ export const ToDoList = () => {
   const showCompletedColor = {
     backgroundColor: completedIsBlue ? "rgb(60, 74, 226)" : "rgb(57, 169, 59)",
   };
-  const handleCompleted = () => {
+  const handleCompleted = (event) => {
     setCompletedIsBlue((prevState) => {
       localStorage.setItem("completedIsBlue", JSON.stringify(!prevState));
       return !prevState;
@@ -603,7 +603,7 @@ export const ToDoList = () => {
         </div>
       </form>
       <div>
-        <div className="clear-filter-container">
+        <div className="operative-buttons">
           <div className="filter-sort-container">
             <div className="task-category">
               <select
@@ -637,7 +637,7 @@ export const ToDoList = () => {
               style={showCompletedColor}
               onClick={handleCompleted}
             >
-              Show Completed
+              {completedIsBlue ? "Show Completed" : "Hide Completed"}
             </button>
           </div>
         </div>

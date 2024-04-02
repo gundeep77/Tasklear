@@ -191,7 +191,7 @@ button:hover {
   color: rgb(79, 92, 255);
 }
 
-.clear-filter-container {
+.operative-buttons {
   display: flex;
   justify-content: space-between;
   margin: 0px 80px;
