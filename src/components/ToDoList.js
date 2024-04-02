@@ -57,8 +57,9 @@ export const ToDoList = () => {
         id: nanoid(),
         task: taskValue.trim(),
         category: !category ? "uncategorized" : category,
-        displayedDate: moment().format("MMM Do"),
-        date: moment().format("YYYY-MM-DD"),
+        displayedDate: moment().format("MM/DD/YYYY"),
+        displayedTime: moment().format("h:mm A"),
+        dateTime: moment().format("YYYY-MM-DDTHH:mm:ss"),
         completed: false,
       };
       if (allTasks.length) {
@@ -117,7 +118,7 @@ export const ToDoList = () => {
     });
   };
 
-  const handleClearList = () => {
+  const handleDeleteAll = () => {
     if (window.confirm("Delete all incomplete as well as complete tasks?")) {
       setAllTasks(() => {
         localStorage.removeItem("allTodos");
@@ -129,6 +130,17 @@ export const ToDoList = () => {
       setTaskValue("");
       inputRef.current.focus();
     }
+  };
+
+  const handleDeleteCompleted = () => {
+    setAllTasks((prevTasks) => {
+      localStorage.setItem(
+        "allTodos",
+        JSON.stringify(prevTasks.filter((obj) => !obj.completed))
+      );
+      return prevTasks.filter((obj) => !obj.completed);
+    });
+    inputRef.current.focus();
   };
 
   const handleEditTask = (taskId) => {
@@ -194,29 +206,34 @@ export const ToDoList = () => {
                 <div className="task" key={obj.id}>
                   <div className="task-status">
                     <input
+                      id="task-status"
                       onChange={() => handleStatusChange(obj.id)}
                       checked={obj.completed}
                       type="checkbox"
                     />
                   </div>
-                  {obj.completed ? (
-                    <s>
-                      <div className="task-content">{obj.task}</div>
-                    </s>
-                  ) : (
-                    <div className="task-content">{obj.task}</div>
-                  )}
-                  <div className="task-date">{obj.displayedDate}</div>
+                  <div className="task-date-container">
+                    <div
+                      style={{
+                        textDecoration: obj.completed && "line-through",
+                      }}
+                      className="task-content"
+                    >
+                      {obj.task}
+                    </div>
+
+                    <div className="task-date">{`${obj.displayedTime}, ${obj.displayedDate}`}</div>
+                  </div>
                   <button
                     id="edit-task"
                     onClick={() => handleEditTask(obj.id)}
-                    className="edit-delete-task"
+                    className="edit-delete-container"
                   >
                     Edit
                   </button>
                   <button
                     onClick={() => handleDeleteTask(obj.id)}
-                    className="edit-delete-task"
+                    className="edit-delete-container"
                   >
                     Delete
                   </button>
@@ -230,29 +247,32 @@ export const ToDoList = () => {
               <div className="task" key={obj.id}>
                 <div className="task-status">
                   <input
+                    id="task-status"
                     onChange={() => handleStatusChange(obj.id)}
                     checked={obj.completed}
                     type="checkbox"
                   />
                 </div>
-                {obj.completed ? (
-                  <s>
-                    <div className="task-content">{obj.task}</div>
-                  </s>
-                ) : (
-                  <div className="task-content">{obj.task}</div>
-                )}
-                <div className="task-date">{obj.displayedDate}</div>
+                <div className="task-date-container">
+                  <div
+                    style={{ textDecoration: obj.completed && "line-through" }}
+                    className="task-content"
+                  >
+                    {obj.task}
+                  </div>
+
+                  <div className="task-date">{`${obj.displayedTime}, ${obj.displayedDate}`}</div>
+                </div>
                 <button
                   id="edit-task"
                   onClick={() => handleEditTask(obj.id)}
-                  className="edit-delete-task"
+                  className="edit-delete-container"
                 >
                   Edit
                 </button>
                 <button
                   onClick={() => handleDeleteTask(obj.id)}
-                  className="edit-delete-task"
+                  className="edit-delete-container"
                 >
                   Delete
                 </button>
@@ -269,29 +289,34 @@ export const ToDoList = () => {
                 <div className="task" key={obj.id}>
                   <div className="task-status">
                     <input
+                      id="task-status"
                       onChange={() => handleStatusChange(obj.id)}
                       checked={obj.completed}
                       type="checkbox"
                     />
                   </div>
-                  {obj.completed ? (
-                    <s>
-                      <div className="task-content">{obj.task}</div>
-                    </s>
-                  ) : (
-                    <div className="task-content">{obj.task}</div>
-                  )}
-                  <div className="task-date">{obj.displayedDate}</div>
+                  <div className="task-date-container">
+                    <div
+                      style={{
+                        textDecoration: obj.completed && "line-through",
+                      }}
+                      className="task-content"
+                    >
+                      {obj.task}
+                    </div>
+
+                    <div className="task-date">{`${obj.displayedTime}, ${obj.displayedDate}`}</div>
+                  </div>
                   <button
                     id="edit-task"
                     onClick={() => handleEditTask(obj.id)}
-                    className="edit-delete-task"
+                    className="edit-delete-container"
                   >
                     Edit
                   </button>
                   <button
                     onClick={() => handleDeleteTask(obj.id)}
-                    className="edit-delete-task"
+                    className="edit-delete-container"
                   >
                     Delete
                   </button>
@@ -306,29 +331,32 @@ export const ToDoList = () => {
               <div className="task" key={obj.id}>
                 <div className="task-status">
                   <input
+                    id="task-status"
                     onChange={() => handleStatusChange(obj.id)}
                     checked={obj.completed}
                     type="checkbox"
                   />
                 </div>
-                {obj.completed ? (
-                  <s>
-                    <div className="task-content">{obj.task}</div>
-                  </s>
-                ) : (
-                  <div className="task-content">{obj.task}</div>
-                )}
-                <div className="task-date">{obj.displayedDate}</div>
+                <div className="task-date-container">
+                  <div
+                    style={{ textDecoration: obj.completed && "line-through" }}
+                    className="task-content"
+                  >
+                    {obj.task}
+                  </div>
+
+                  <div className="task-date">{`${obj.displayedTime}, ${obj.displayedDate}`}</div>
+                </div>
                 <button
                   id="edit-task"
                   onClick={() => handleEditTask(obj.id)}
-                  className="edit-delete-task"
+                  className="edit-delete-container"
                 >
                   Edit
                 </button>
                 <button
                   onClick={() => handleDeleteTask(obj.id)}
-                  className="edit-delete-task"
+                  className="edit-delete-container"
                 >
                   Delete
                 </button>
@@ -426,7 +454,7 @@ export const ToDoList = () => {
         </div>
       </form>
       <div className="tasks-display">
-        <div className="clear-and-filter">
+        <div className="clear-filter-container">
           <div style={{ display: "flex" }}>
             <div className="task-category">
               <select
@@ -453,14 +481,18 @@ export const ToDoList = () => {
               </button>
             </div>
           </div>
-
-          {allTasks.length && (
-            <div className="clear-all">
-              <button id="clear-all" onClick={handleClearList}>
-                Clear All
+          <div style={{ display: "flex" }}>
+            <div>
+              <button id="delete-completed" onClick={handleDeleteCompleted}>
+                Delete Completed
               </button>
             </div>
-          )}
+            <div>
+              <button id="delete-all" onClick={handleDeleteAll}>
+                Delete All
+              </button>
+            </div>
+          </div>
         </div>
         {buildTask()}
       </div>

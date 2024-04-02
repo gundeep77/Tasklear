@@ -14,6 +14,7 @@ button {
   background-color: rgb(60, 74, 226);
   transition: background-color 0.2s ease;
   color: white;
+  cursor: pointer;
 }
 
 button:hover {
@@ -27,7 +28,7 @@ button:hover {
   /* color: black; */
 }
 
-.edit-delete-task {
+.edit-delete-container {
   margin: 10px;
   padding: 7px;
   width: 7em;
@@ -35,7 +36,7 @@ button:hover {
   background-color: rgb(60, 74, 226);
 }
 
-.edit-delete-task:hover {
+.edit-delete-container:hover {
   margin: 10px;
   padding: 7px;
   width: 7em;
@@ -83,17 +84,18 @@ button:hover {
 }
 
 .task-content {
-  padding: 5px 10px;
-  margin: 10px;
+  padding: 0px 10px;
+  margin: auto 10px;
   font-size: medium;
   width: 200px;
   overflow: scroll;
   text-align: left;
 }
 .task-date {
-  padding: 5px 10px;
-  margin: 10px;
-  font-size: medium;
+  padding: 0px 10px;
+  margin: auto 10px;
+  font-size: small;
+  opacity: 0.6;
 }
 
 .task {
@@ -180,7 +182,7 @@ button:hover {
   color: rgb(79, 92, 255);
 }
 
-.clear-and-filter {
+.clear-filter-container {
   display: flex;
   justify-content: space-between;
   margin: 0px 80px;
@@ -199,15 +201,31 @@ button:hover {
   padding: 10px;
   border: 1.5px solid transparent;
   color: white;
-  cursor: pointer;
 }
 
-#clear-all {
+#delete-all {
   background-color: rgb(237, 31, 31);
-  cursor: pointer;
 }
 
-#clear-all:hover {
-  border: 1.5px solid transparent;
+#delete-all:hover {
+  background-color: transparent;
+}
+
+#delete-completed {
   background-color: rgb(237, 31, 31);
+}
+#delete-completed:hover {
+  background-color: transparent;
+}
+
+.task-date-container {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+#task-status {
+  height: 22px;
+  width: 22px;
+  accent-color: rgb(57, 189, 59);
 }
