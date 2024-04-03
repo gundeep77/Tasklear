@@ -30,7 +30,7 @@ button:hover {
 .edit-delete {
   margin: 10px;
   padding: 7px;
-  width: 7em;
+  width: 75px;
   height: fit-content;
   background-color: rgb(60, 74, 226);
 }
@@ -38,7 +38,12 @@ button:hover {
 .edit-delete:hover {
   margin: 10px;
   padding: 7px;
-  width: 7em;
+  width: 75px;
+}
+
+.edit-delete-container {
+  display: flex;
+  justify-content: flex-end;
 }
 
 #new-task {
@@ -76,6 +81,11 @@ button:hover {
   background-color: transparent;
 }
 
+.status-content-container {
+  display: flex;
+  justify-content: flex-start;
+}
+
 .task-status {
   padding: 5px 10px;
   margin: 5px;
@@ -88,6 +98,7 @@ button:hover {
   width: 250px;
   overflow: scroll;
   text-align: left;
+  line-height: 22px;
 }
 .task-date {
   padding: 2px 10px;
@@ -263,14 +274,4 @@ button:hover {
 #priority-image {
   padding: 5px 10px;
   margin: 5px;
-}
-
-.status-content-container {
-  display: flex;
-  justify-content: flex-start;
-}
-
-.edit-delete-container {
-  display: flex;
-  justify-content: flex-end;
 }
