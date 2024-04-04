@@ -1,6 +1,6 @@
 import React from "react";
 import "./App.css";
-import { ToDoList } from "./components/ToDoList";
+import { TaskList } from "./components/TaskList";
 
 function App() {
   return (
@@ -9,7 +9,7 @@ function App() {
         Welcome to <span className="app-name">Tasklear</span>
       </h1>
       <p className="sub-heading">Manage tasks on the go!</p>
-      <ToDoList />
+      <TaskList />
     </div>
   );
 }
