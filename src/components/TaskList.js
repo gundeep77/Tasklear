@@ -11,20 +11,20 @@ export const TaskList = () => {
   const [category, setCategory] = useState("");
   const [highPriority, setHighPriority] = useState(false);
   const inputRef = useRef();
-  const [filter, setFilter] = useState(
-    localStorage.getItem("filter") !== null
-      ? JSON.parse(localStorage.getItem("filter"))
-      : "all"
+  const [filterParam, setFilterParam] = useState(
+    localStorage.getItem("filterParam") !== null
+      ? JSON.parse(localStorage.getItem("filterParam"))
+      : ""
   );
   const [sortParameter, setSortParameter] = useState(
     localStorage.getItem("sortParam") !== null
       ? JSON.parse(localStorage.getItem("sortParam"))
-      : "most recent"
+      : ""
   );
-  const [completedIsBlue, setCompletedIsBlue] = useState(
-    localStorage.getItem("completedIsBlue") !== null
-      ? JSON.parse(localStorage.getItem("completedIsBlue"))
-      : true
+  const [showCompleted, setShowCompleted] = useState(
+    localStorage.getItem("showCompleted") !== null
+      ? JSON.parse(localStorage.getItem("showCompleted"))
+      : false
   );
   const [allTasks, setAllTasks] = useState(
     localStorage.getItem("allTodos") !== null
@@ -42,11 +42,11 @@ export const TaskList = () => {
   //   }, 2000);
   // };
 
-  const sortingFunction = useCallback((arr, sortParam) => {
-    if (sortParam === "dateTime") {
+  const sortBasedOnDate = useCallback(
+    (arr, param) =>
       arr.sort((a, b) => {
-        const dateA = moment(a.dateTime, "YYYY-MM-DDTh:mm:ss A");
-        const dateB = moment(b.dateTime, "YYYY-MM-DDTh:mm:ss A");
+        const dateA = moment(a[param], "YYYY-MM-DDTh:mm:ss A");
+        const dateB = moment(b[param], "YYYY-MM-DDTh:mm:ss A");
 
         if (dateA.isBefore(dateB)) {
           return 1;
@@ -55,19 +55,37 @@ export const TaskList = () => {
         } else {
           return 0;
         }
-      });
-    } else if (sortParam === "highPriority") {
-      arr.sort((a, b) => b.highPriority - a.highPriority);
-    }
-    return arr;
-  }, []);
+      }),
+    []
+  );
+
+  const sortingFunction = useCallback(
+    (arr, sortParam) => {
+      if (sortParam === "highPriority") {
+        if (!arr.find((obj) => obj.highPriority)) {
+          return sortBasedOnDate(arr);
+        }
+        return arr.sort((a, b) => b.highPriority - a.highPriority);
+      }
+      return sortBasedOnDate(arr, sortParam);
+    },
+    [sortBasedOnDate]
+  );
 
   useEffect(() => {
+    let sortingParam;
+    if (sortParameter === "recently added" || sortParameter === "") {
+      sortingParam = "dateTime";
+    } else if (sortParameter === "last edited") {
+      sortingParam = "lastEdited";
+    } else if (sortParameter === "priority") {
+      sortingParam = "highPriority";
+    }
     setAllTasks(
       localStorage.getItem("allTodos") !== null
         ? sortingFunction(
             JSON.parse(localStorage.getItem("allTodos")),
-            sortParameter === "most recent" ? "dateTime" : "highPriority"
+            sortingParam
           )
         : []
     );
@@ -76,20 +94,21 @@ export const TaskList = () => {
   useEffect(() => {
     if (!allTasks.length) {
       localStorage.removeItem("allTodos");
-      localStorage.removeItem("completedIsBlue");
+      localStorage.removeItem("showCompleted");
       localStorage.removeItem("sortParam");
-      localStorage.removeItem("filter");
+      localStorage.removeItem("filteParam");
       setCategory("");
-      setFilter("all");
-      setCompletedIsBlue(true);
+      setFilterParam("");
+      setSortParameter("");
+      setShowCompleted(false);
     }
+    inputRef.current.focus();
   }, [allTasks]);
 
   const handleAddNewTask = (event) => {
     event.preventDefault();
     if (!taskValue) {
       setTaskValue("");
-      inputRef.current.focus();
 
       return;
     }
@@ -100,8 +119,9 @@ export const TaskList = () => {
         highPriority: highPriority,
         category: !category ? "uncategorized" : category,
         displayedDate: moment().format("MM/DD/YYYY"),
-        displayedTime: moment().format("h:mm A"),
+        displayedTime: moment().format("h:mm:ss A"),
         dateTime: moment().format("YYYY-MM-DDTh:mm:ss A"),
+        lastEdited: moment().format("YYYY-MM-DDTh:mm:ss A"),
         completed: false,
       };
       if (allTasks.length) {
@@ -120,6 +140,9 @@ export const TaskList = () => {
       }
     } else {
       allTasks.some((task, index) => {
+        const oldTask = task.task;
+        const oldCategory = task.category;
+        const oldPriority = task.highPriority;
         setHighPriority(task.highPriority);
         if (task.id === tempId) {
           task.task = taskValue.trim();
@@ -127,6 +150,13 @@ export const TaskList = () => {
             task.category = category;
           }
           task.highPriority = highPriority;
+          if (
+            task.task !== oldTask ||
+            task.category !== oldCategory ||
+            task.highPriority !== oldPriority
+          ) {
+            task.lastEdited = moment().format("YYYY-MM-DDTh:mm:ss A");
+          }
           const updatedTask = task;
           setAllTasks((prevTasks) => {
             prevTasks.splice(index, 1, updatedTask);
@@ -143,6 +173,7 @@ export const TaskList = () => {
     setTaskValue("");
     setHighPriority(false);
     setCount((prevCount) => prevCount + 1);
+    inputRef.current.focus();
   };
 
   const handleStatusChange = (taskId) => {
@@ -156,7 +187,7 @@ export const TaskList = () => {
           return prevTasks;
         });
         setCount((prevCount) => prevCount + 1);
-        inputRef.current.focus();
+
         return true;
       }
       return false;
@@ -201,7 +232,17 @@ export const TaskList = () => {
     setAddOrEdit("Add New Task");
     setTaskValue("");
     setHighPriority(false);
+    setCategory("");
     inputRef.current.focus();
+  };
+
+  const handleEscapePress = (event) => {
+    if (addOrEdit === "Save" && event.key === "Escape") {
+      setAddOrEdit("Add New Task");
+      setTaskValue("");
+      setHighPriority(false);
+      setCategory("");
+    }
   };
 
   const handleDeleteTask = (taskId) => {
@@ -211,7 +252,6 @@ export const TaskList = () => {
       return updatedAllTasks;
     });
     setAddOrEdit("Add New Task");
-    inputRef.current.focus();
   };
 
   const handleDeleteCompleted = () => {
@@ -223,7 +263,6 @@ export const TaskList = () => {
       return prevTasks.filter((obj) => !obj.completed);
     });
     setAddOrEdit("Add New Task");
-    inputRef.current.focus();
   };
 
   const handleDeleteAll = () => {
@@ -233,13 +272,12 @@ export const TaskList = () => {
       });
       setAddOrEdit("Add New Task");
       setTaskValue("");
-      inputRef.current.focus();
     }
   };
 
   const handleFilterChange = (event) => {
-    setFilter(() => {
-      localStorage.setItem("filter", JSON.stringify(event.target.value));
+    setFilterParam(() => {
+      localStorage.setItem("filterParam", JSON.stringify(event.target.value));
       return event.target.value;
     });
     setAddOrEdit("Add New Task");
@@ -262,20 +300,17 @@ export const TaskList = () => {
     inputRef.current.focus();
   };
 
-  const showCompletedColor = {
-    backgroundColor: completedIsBlue ? "rgb(60, 74, 226)" : "rgb(57, 169, 59)",
-  };
-  const handleCompleted = (event) => {
-    setCompletedIsBlue((prevState) => {
-      localStorage.setItem("completedIsBlue", JSON.stringify(!prevState));
+  const handleCompleted = () => {
+    setShowCompleted((prevState) => {
+      localStorage.setItem("showCompleted", JSON.stringify(!prevState));
       return !prevState;
     });
     inputRef.current.focus();
   };
 
   const displayedTasks = () => {
-    if (filter === "all") {
-      return completedIsBlue
+    if (filterParam === "all" || filterParam === "") {
+      return showCompleted
         ? allTasks.map((obj, idx) => {
             if (!obj.completed) {
               return (
@@ -302,9 +337,11 @@ export const TaskList = () => {
             );
           });
     } else {
-      const filteredTasks = allTasks.filter((obj) => obj.category === filter);
-      return allTasks.filter((obj) => obj.category === filter).length ? (
-        completedIsBlue ? (
+      const filteredTasks = allTasks.filter(
+        (obj) => obj.category === filterParam
+      );
+      return allTasks.filter((obj) => obj.category === filterParam).length ? (
+        showCompleted ? (
           filteredTasks.map((obj, idx) => {
             if (!obj.completed) {
               return (
@@ -333,7 +370,7 @@ export const TaskList = () => {
           })
         )
       ) : (
-        <h5>No {filter} tasks!</h5>
+        <h5>No {filterParam} tasks!</h5>
       );
     }
   };
@@ -355,6 +392,7 @@ export const TaskList = () => {
                 : "Edit Your Task..."
             }
             type="text"
+            onKeyDown={handleEscapePress}
           />
           <div className="task-category">
             <select
@@ -373,6 +411,7 @@ export const TaskList = () => {
             High Priority?
           </label>
           <input
+            id="high-priority"
             className="high-priority-input"
             type="checkbox"
             checked={highPriority}
@@ -396,11 +435,12 @@ export const TaskList = () => {
             <div className="filter-sort-container">
               <div className="task-category">
                 <select
-                  value={filter}
+                  value={filterParam}
                   onChange={handleFilterChange}
                   name="filter-category"
                   className="filter-category-select"
                 >
+                  <option value="">--Filter By--</option>
                   <option value="all">All Tasks</option>
                   <option value="home">Home</option>
                   <option value="work">Work</option>
@@ -415,25 +455,29 @@ export const TaskList = () => {
                   name="sort-task"
                   className="sort-tasks-select"
                 >
-                  <option value="most recent">Most Recent</option>
+                  <option value="">--Sort By--</option>
+                  <option value="recently added">Recently Added</option>
                   <option value="priority">Priority</option>
+                  <option value="last edited">Last Edited</option>
                 </select>
               </div>
             </div>
             <div>
               <button
                 className="show-completed-button"
-                style={showCompletedColor}
                 onClick={handleCompleted}
               >
-                {completedIsBlue ? "Show Completed" : "Hide Completed"}
+                {showCompleted ? "Show Completed" : "Hide Completed"}
               </button>
             </div>
           </div>
           {displayedTasks()}
           <div className="delete-completed-container">
             <div>
-              <button className="delete-completed-button" onClick={handleDeleteCompleted}>
+              <button
+                className="delete-completed-button"
+                onClick={handleDeleteCompleted}
+              >
                 Delete Completed
               </button>
             </div>

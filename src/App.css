@@ -54,6 +54,8 @@ button:hover {
 }
 
 .new-task-input {
+  margin: 20px;
+  margin-left: 0;
   padding: 12px;
   border-radius: 10px;
   border: 1.5px solid white;
@@ -70,6 +72,7 @@ button:hover {
 
 .add-task-button {
   margin: 20px;
+  margin-right: 0;
   border-radius: 10px;
   text-decoration: none;
   border: none;
@@ -80,6 +83,7 @@ button:hover {
 
 .add-task-button:hover {
   margin: 20px;
+  margin-right: 0;
   border-radius: 10px;
   text-decoration: none;
   border: none;
@@ -189,8 +193,10 @@ button:hover {
 .form-container {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-around;
+  margin: auto;
   margin-bottom: 40px;
+  max-width: 800px;
 }
 
 .heading {
@@ -221,6 +227,18 @@ button:hover {
   padding: 10px;
   border: 1.5px solid transparent;
   color: white;
+  background-color: rgb(57, 169, 59);
+}
+
+.show-completed-button:hover {
+  margin: 20px;
+  border-radius: 10px;
+  text-decoration: none;
+  border: none;
+  padding: 10px;
+  border: 1.5px solid transparent;
+  color: white;
+  background-color: rgb(57, 169, 59);
 }
 
 .delete-all-button {
