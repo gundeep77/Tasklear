@@ -92,6 +92,14 @@ button:hover {
   background-color: transparent;
 }
 
+.cancel-edit-button {
+  margin-right: 0;
+}
+
+.cancel-edit-button:hover {
+  margin-right: 0;
+}
+
 .status-content-container {
   display: flex;
   justify-content: flex-start;
@@ -131,7 +139,7 @@ button:hover {
 }
 
 .choose-category-select {
-  margin: 20px;
+  margin: 20px auto;
   border-radius: 10px;
   text-decoration: none;
   border: none;

@@ -421,7 +421,7 @@ export const TaskList = () => {
             {addOrEdit}
           </button>
           {addOrEdit === "Save" && (
-            <button style={{ marginLeft: 0 }} onClick={handleCanceEdit}>
+            <button className="cancel-edit-button" style={{ marginLeft: 0 }} onClick={handleCanceEdit}>
               Cancel
             </button>
           )}
