@@ -291,32 +291,45 @@ export const ToDoList = () => {
                       <div className="task-date">{`${obj.displayedTime}, ${obj.displayedDate}`}</div>
                     </div>
                   </div>
-                  <div id="priority-image">
-                    {obj.highPriority && (
+                  <div className="edit-delete-container">
+                    {obj.highPriority ? (
                       <img
-                        alt="high-priority-task"
-                        src="high-priority.png"
-                        height={25}
-                        width={25}
+                        id="priority-image"
+                        alt="high-priority"
+                        src="priority.png"
+                        height={20}
+                        width={20}
+                        style={{ filter: "invert(0.1)" }}
+                      />
+                    ) : (
+                      <img
+                        id="priority-image"
+                        alt="high-priority"
+                        src="priority.png"
+                        height={0}
+                        width={0}
                         style={{ filter: "invert(0.1)" }}
                       />
                     )}
-                  </div>
-                  <div className="edit-delete-container">
-                    <button
-                      id="edit-task"
+                    <img
                       onClick={() => handleEditTask(obj.id)}
+                      id="edit-task"
                       className="edit-delete"
-                    >
-                      Edit
-                    </button>
-                    <button
-                      id="delete-task"
+                      alt="edit"
+                      src="edit.png"
+                      height={20}
+                      width={20}
+                    />
+                    <img
                       onClick={() => handleDeleteTask(obj.id)}
+                      id="delete-task"
                       className="edit-delete"
-                    >
-                      Delete
-                    </button>
+                      alt="delete"
+                      src="delete.png"
+                      height={20}
+                      width={20}
+                      style={{ filter: "invert(0)" }}
+                    />
                   </div>
                 </div>
               );
@@ -348,32 +361,45 @@ export const ToDoList = () => {
                     <div className="task-date">{`${obj.displayedTime}, ${obj.displayedDate}`}</div>
                   </div>
                 </div>
-                <div id="priority-image">
-                  {obj.highPriority && (
+                <div className="edit-delete-container">
+                  {obj.highPriority ? (
                     <img
-                      alt="high-priority-task"
-                      src="high-priority.png"
-                      height={25}
-                      width={25}
+                      id="priority-image"
+                      alt="high-priority"
+                      src="priority.png"
+                      height={20}
+                      width={20}
+                      style={{ filter: "invert(0.1)" }}
+                    />
+                  ) : (
+                    <img
+                      id="priority-image"
+                      alt="high-priority"
+                      src="priority.png"
+                      height={0}
+                      width={0}
                       style={{ filter: "invert(0.1)" }}
                     />
                   )}
-                </div>
-                <div className="edit-delete-container">
-                  <button
-                    id="edit-task"
+                  <img
                     onClick={() => handleEditTask(obj.id)}
+                    id="edit-task"
                     className="edit-delete"
-                  >
-                    Edit
-                  </button>
-                  <button
-                    id="delete-task"
+                    alt="edit"
+                    src="edit.png"
+                    height={20}
+                    width={20}
+                  />
+                  <img
                     onClick={() => handleDeleteTask(obj.id)}
+                    id="delete-task"
                     className="edit-delete"
-                  >
-                    Delete
-                  </button>
+                    alt="delete"
+                    src="delete.png"
+                    height={20}
+                    width={20}
+                    style={{ filter: "invert(0)" }}
+                  />
                 </div>
               </div>
             );
@@ -408,32 +434,45 @@ export const ToDoList = () => {
                       <div className="task-date">{`${obj.displayedTime}, ${obj.displayedDate}`}</div>
                     </div>
                   </div>
-                  <div id="priority-image">
-                    {obj.highPriority && (
+                  <div className="edit-delete-container">
+                    {obj.highPriority ? (
                       <img
-                        alt="high-priority-task"
-                        src="high-priority.png"
-                        height={25}
-                        width={25}
+                        id="priority-image"
+                        alt="high-priority"
+                        src="priority.png"
+                        height={20}
+                        width={20}
+                        style={{ filter: "invert(0.1)" }}
+                      />
+                    ) : (
+                      <img
+                        id="priority-image"
+                        alt="high-priority"
+                        src="priority.png"
+                        height={0}
+                        width={0}
                         style={{ filter: "invert(0.1)" }}
                       />
                     )}
-                  </div>
-                  <div className="edit-delete-container">
-                    <button
-                      id="edit-task"
+                    <img
                       onClick={() => handleEditTask(obj.id)}
+                      id="edit-task"
                       className="edit-delete"
-                    >
-                      Edit
-                    </button>
-                    <button
-                      id="delete-task"
+                      alt="edit"
+                      src="edit.png"
+                      height={20}
+                      width={20}
+                    />
+                    <img
                       onClick={() => handleDeleteTask(obj.id)}
+                      id="delete-task"
                       className="edit-delete"
-                    >
-                      Delete
-                    </button>
+                      alt="delete"
+                      src="delete.png"
+                      height={20}
+                      width={20}
+                      style={{ filter: "invert(0)" }}
+                    />
                   </div>
                 </div>
               );
@@ -466,32 +505,45 @@ export const ToDoList = () => {
                     <div className="task-date">{`${obj.displayedTime}, ${obj.displayedDate}`}</div>
                   </div>
                 </div>
-                <div id="priority-image">
-                  {obj.highPriority && (
+                <div className="edit-delete-container">
+                  {obj.highPriority ? (
                     <img
-                      alt="high-priority-task"
-                      src="high-priority.png"
-                      height={25}
-                      width={25}
+                      id="priority-image"
+                      alt="high-priority"
+                      src="priority.png"
+                      height={20}
+                      width={20}
+                      style={{ filter: "invert(0.1)" }}
+                    />
+                  ) : (
+                    <img
+                      id="priority-image"
+                      alt="high-priority"
+                      src="priority.png"
+                      height={0}
+                      width={0}
                       style={{ filter: "invert(0.1)" }}
                     />
                   )}
-                </div>
-                <div className="edit-delete-container">
-                  <button
-                    id="edit-task"
+                  <img
                     onClick={() => handleEditTask(obj.id)}
+                    id="edit-task"
                     className="edit-delete"
-                  >
-                    Edit
-                  </button>
-                  <button
-                    id="delete-task"
+                    alt="edit"
+                    src="edit.png"
+                    height={20}
+                    width={20}
+                  />
+                  <img
                     onClick={() => handleDeleteTask(obj.id)}
+                    id="delete-task"
                     className="edit-delete"
-                  >
-                    Delete
-                  </button>
+                    alt="delete"
+                    src="delete.png"
+                    height={20}
+                    width={20}
+                    style={{ filter: "invert(0)" }}
+                  />
                 </div>
               </div>
             );
