@@ -189,7 +189,7 @@ export const ToDoList = () => {
     allTasks.some((task) => {
       if (taskId === task.id) {
         setTaskValue(task.task);
-        setAddOrEdit("Done");
+        setAddOrEdit("Save");
         setTempId(taskId);
         setHighPriority(task.highPriority);
         setCategory(task.category);
@@ -647,7 +647,7 @@ export const ToDoList = () => {
           <button id="add-task" type="submit">
             {addOrEdit}
           </button>
-          {addOrEdit === "Done" && (
+          {addOrEdit === "Save" && (
             <button style={{ marginLeft: 0 }} onClick={handleCanceEdit}>
               Cancel
             </button>
