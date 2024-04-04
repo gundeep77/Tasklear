@@ -119,7 +119,7 @@ export const TaskList = () => {
         highPriority: highPriority,
         category: !category ? "uncategorized" : category,
         displayedDate: moment().format("MM/DD/YYYY"),
-        displayedTime: moment().format("h:mm:ss A"),
+        displayedTime: moment().format("h:mm A"),
         dateTime: moment().format("YYYY-MM-DDTh:mm:ss A"),
         lastEdited: moment().format("YYYY-MM-DDTh:mm:ss A"),
         completed: false,
