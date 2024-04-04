@@ -7,7 +7,7 @@ export const TaskList = () => {
   const [taskValue, setTaskValue] = useState("");
   const [count, setCount] = useState(0);
   const [addOrEdit, setAddOrEdit] = useState("Add New Task");
-  const [tempId, setTempId] = useState("");
+  const [idForEdit, setIdForEdit] = useState("");
   const [category, setCategory] = useState("");
   const [highPriority, setHighPriority] = useState(false);
   const inputRef = useRef();
@@ -144,11 +144,9 @@ export const TaskList = () => {
         const oldCategory = task.category;
         const oldPriority = task.highPriority;
         setHighPriority(task.highPriority);
-        if (task.id === tempId) {
+        if (task.id === idForEdit) {
           task.task = taskValue.trim();
-          if (category) {
-            task.category = category;
-          }
+          task.category = category;
           task.highPriority = highPriority;
           if (
             task.task !== oldTask ||
@@ -172,7 +170,6 @@ export const TaskList = () => {
     setCategory("");
     setTaskValue("");
     setHighPriority(false);
-    setCount((prevCount) => prevCount + 1);
     inputRef.current.focus();
   };
 
@@ -218,7 +215,7 @@ export const TaskList = () => {
       if (taskId === task.id) {
         setTaskValue(task.task);
         setAddOrEdit("Save");
-        setTempId(taskId);
+        setIdForEdit(taskId);
         setHighPriority(task.highPriority);
         setCategory(task.category);
         return true;
@@ -395,17 +392,31 @@ export const TaskList = () => {
             onKeyDown={handleEscapePress}
           />
           <div className="task-category">
-            <select
-              value={category}
-              onChange={handleCategoryChange}
-              name="choose-category"
-              className="choose-category-select"
-            >
-              <option value="">--Choose Category--</option>
-              <option value="home">Home</option>
-              <option value="work">Work</option>
-              <option value="casual">Casual</option>
-            </select>
+            {addOrEdit === "Add New Task" ? (
+              <select
+                value={category}
+                onChange={handleCategoryChange}
+                name="choose-category"
+                className="choose-category-select"
+              >
+                <option value="">--Choose Category--</option>
+                <option value="home">Home</option>
+                <option value="work">Work</option>
+                <option value="casual">Casual</option>
+              </select>
+            ) : (
+              <select
+                value={category}
+                onChange={handleCategoryChange}
+                name="choose-category"
+                className="choose-category-select"
+              >
+                <option value="home">Home</option>
+                <option value="work">Work</option>
+                <option value="casual">Casual</option>
+                <option value="uncategorized">Uncategorized</option>
+              </select>
+            )}
           </div>
           <label className="high-priority-label" htmlFor="high-priority">
             High Priority?
@@ -421,7 +432,11 @@ export const TaskList = () => {
             {addOrEdit}
           </button>
           {addOrEdit === "Save" && (
-            <button className="cancel-edit-button" style={{ marginLeft: 0 }} onClick={handleCanceEdit}>
+            <button
+              className="cancel-edit-button"
+              style={{ marginLeft: 0 }}
+              onClick={handleCanceEdit}
+            >
               Cancel
             </button>
           )}

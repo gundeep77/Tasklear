@@ -3,7 +3,7 @@ export const Task = (props) => (
     <div className="status-content-container">
       <div className="task-status">
         <input
-        className="task-status-input"
+          className="task-status-input"
           id={props.obj.id}
           onChange={() => props.handleStatusChange(props.obj.id)}
           checked={props.obj.completed}
@@ -11,7 +11,8 @@ export const Task = (props) => (
         />
       </div>
       <div className="task-date-container">
-        <label htmlFor={props.obj.id}
+        <label
+          htmlFor={props.obj.id}
           style={{
             textDecoration: props.obj.completed && "line-through",
           }}
