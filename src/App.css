@@ -27,7 +27,7 @@ button:hover {
   background-color: transparent;
 }
 
-#priority-image {
+.priority-img {
   margin: 0px 12px;
   margin-right: 150px;
   padding: 0px;
@@ -37,7 +37,6 @@ button:hover {
   margin: 0px 12px;
   padding: 0px;
   cursor: pointer;
-
 }
 
 .edit-delete:hover {
@@ -54,7 +53,7 @@ button:hover {
   padding: 10px;
 }
 
-#new-task {
+.new-task-input {
   padding: 12px;
   border-radius: 10px;
   border: 1.5px solid white;
@@ -69,7 +68,7 @@ button:hover {
   opacity: 0.5;
 }
 
-#add-task {
+.add-task-button {
   margin: 20px;
   border-radius: 10px;
   text-decoration: none;
@@ -79,7 +78,7 @@ button:hover {
   background-color: rgb(60, 74, 226);
 }
 
-#add-task:hover {
+.add-task-button:hover {
   margin: 20px;
   border-radius: 10px;
   text-decoration: none;
@@ -127,7 +126,7 @@ button:hover {
   align-content: center;
 }
 
-#choose-category {
+.choose-category-select {
   margin: 20px;
   border-radius: 10px;
   text-decoration: none;
@@ -142,7 +141,7 @@ button:hover {
   cursor: pointer;
 }
 
-#filter-category {
+.filter-category-select {
   margin: 20px;
   border-radius: 10px;
   text-decoration: none;
@@ -157,7 +156,7 @@ button:hover {
   cursor: pointer;
 }
 
-#sort-tasks {
+.sort-tasks-select {
   margin: 20px;
   border-radius: 10px;
   text-decoration: none;
@@ -214,7 +213,7 @@ button:hover {
   margin: 0px 80px;
 }
 
-#show-completed {
+.show-completed-button {
   margin: 20px;
   border-radius: 10px;
   text-decoration: none;
@@ -224,18 +223,18 @@ button:hover {
   color: white;
 }
 
-#delete-all {
+.delete-all-button {
   background-color: rgb(200, 60, 50);
 }
 
-#delete-all:hover {
+.delete-all-button:hover {
   background-color: transparent;
 }
 
-#delete-completed {
+.delete-completed-button {
   background-color: rgb(200, 60, 50);
 }
-#delete-completed:hover {
+.delete-completed-button:hover {
   background-color: transparent;
 }
 
@@ -245,7 +244,7 @@ button:hover {
   text-align: left;
 }
 
-#task-status {
+.task-status-input {
   height: 22px;
   width: 22px;
   accent-color: rgb(57, 189, 59);
@@ -261,7 +260,7 @@ button:hover {
   display: flex;
 }
 
-.high-priority {
+.high-priority-input {
   height: 17px;
   width: 17px;
   accent-color: rgb(200, 60, 50);
