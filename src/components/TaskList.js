@@ -11,6 +11,22 @@ export const TaskList = () => {
   const [category, setCategory] = useState("");
   const [highPriority, setHighPriority] = useState(false);
   const inputRef = useRef();
+  const taskCategories = [
+    "Chores",
+    "Work",
+    "Casual",
+    "Learning",
+    "Health Care",
+    "Next Week",
+  ];
+  const maxTaskLength = 125;
+  const [allTasks, setAllTasks] = useState(
+    localStorage.getItem("allTodos") !== null
+      ? JSON.parse(localStorage.getItem("allTodos")).sort(
+          (a, b) => b.dateTime - a.dateTime
+        )
+      : []
+  );
   const [filterParam, setFilterParam] = useState(
     localStorage.getItem("filterParam") !== null
       ? JSON.parse(localStorage.getItem("filterParam"))
@@ -25,13 +41,6 @@ export const TaskList = () => {
     localStorage.getItem("showCompleted") !== null
       ? JSON.parse(localStorage.getItem("showCompleted"))
       : false
-  );
-  const [allTasks, setAllTasks] = useState(
-    localStorage.getItem("allTodos") !== null
-      ? JSON.parse(localStorage.getItem("allTodos")).sort(
-          (a, b) => b.dateTime - a.dateTime
-        )
-      : []
   );
 
   // const taskSuggestions = () => {
@@ -74,11 +83,11 @@ export const TaskList = () => {
 
   useEffect(() => {
     let sortingParam;
-    if (sortParameter === "recently added" || sortParameter === "") {
+    if (sortParameter === "Recently Added" || sortParameter === "") {
       sortingParam = "dateTime";
-    } else if (sortParameter === "last edited") {
+    } else if (sortParameter === "Last Edited") {
       sortingParam = "lastEdited";
-    } else if (sortParameter === "priority") {
+    } else if (sortParameter === "Priority") {
       sortingParam = "highPriority";
     }
     setAllTasks(
@@ -93,10 +102,7 @@ export const TaskList = () => {
 
   useEffect(() => {
     if (!allTasks.length) {
-      localStorage.removeItem("allTodos");
-      localStorage.removeItem("showCompleted");
-      localStorage.removeItem("sortParam");
-      localStorage.removeItem("filteParam");
+      localStorage.clear();
       setCategory("");
       setFilterParam("");
       setSortParameter("");
@@ -117,7 +123,7 @@ export const TaskList = () => {
         id: nanoid(),
         task: taskValue.trim(),
         highPriority: highPriority,
-        category: !category ? "uncategorized" : category,
+        category: !category ? "Uncategorized" : category,
         displayedDate: moment().format("MM/DD/YYYY"),
         displayedTime: moment().format("h:mm A"),
         dateTime: moment().format("YYYY-MM-DDTh:mm:ss A"),
@@ -126,16 +132,23 @@ export const TaskList = () => {
       };
       if (allTasks.length) {
         setAllTasks((prevTasks) => {
-          localStorage.setItem(
-            "allTodos",
-            JSON.stringify([newTask, ...prevTasks])
-          );
-          return [newTask, ...prevTasks];
+          if (category === "" || taskCategories.includes(category)) {
+            localStorage.setItem(
+              "allTodos",
+              JSON.stringify([newTask, ...prevTasks])
+            );
+            return [newTask, ...prevTasks];
+          }
+          return [prevTasks];
         });
       } else {
+        console.log("hello");
         setAllTasks(() => {
-          localStorage.setItem("allTodos", JSON.stringify([newTask]));
-          return [newTask];
+          if (category === "" || taskCategories.includes(category)) {
+            localStorage.setItem("allTodos", JSON.stringify([newTask]));
+            return [newTask];
+          }
+          return [];
         });
       }
     } else {
@@ -274,9 +287,17 @@ export const TaskList = () => {
   };
 
   const handleFilterChange = (event) => {
+    console.log(event.target.value);
     setFilterParam(() => {
-      localStorage.setItem("filterParam", JSON.stringify(event.target.value));
-      return event.target.value;
+      if (
+        event.target.value === "" ||
+        event.target.value === "All Tasks" ||
+        taskCategories.includes(event.target.value)
+      ) {
+        localStorage.setItem("filterParam", JSON.stringify(event.target.value));
+        return event.target.value;
+      }
+      return "";
     });
     setAddOrEdit("Add New Task");
     setCategory("");
@@ -287,8 +308,16 @@ export const TaskList = () => {
 
   const handleSortTasks = (event) => {
     setSortParameter(() => {
-      localStorage.setItem("sortParam", JSON.stringify(event.target.value));
-      return event.target.value;
+      if (
+        event.target.value === "" ||
+        event.target.value === "Recently Added" ||
+        event.target.value === "Priority" ||
+        event.target.value === "Last Edited"
+      ) {
+        localStorage.setItem("sortParam", JSON.stringify(event.target.value));
+        return event.target.value;
+      }
+      return "";
     });
     setAddOrEdit("Add New Task");
     setCategory("");
@@ -307,7 +336,7 @@ export const TaskList = () => {
   };
 
   const displayedTasks = () => {
-    if (filterParam === "all" || filterParam === "") {
+    if (filterParam === "All Tasks" || filterParam === "") {
       return showCompleted
         ? allTasks.map((obj, idx) => {
             if (!obj.completed) {
@@ -391,6 +420,7 @@ export const TaskList = () => {
             }
             type="text"
             onKeyDown={handleEscapePress}
+            maxLength={maxTaskLength}
           />
           <div className="task-category">
             {addOrEdit === "Add New Task" ? (
@@ -401,9 +431,11 @@ export const TaskList = () => {
                 className="choose-category-select"
               >
                 <option value="">--Choose Category--</option>
-                <option value="home">Home</option>
-                <option value="work">Work</option>
-                <option value="casual">Casual</option>
+                {taskCategories.map((taskCategory, idx) => (
+                  <option key={idx} value={taskCategory}>
+                    {taskCategory}
+                  </option>
+                ))}
               </select>
             ) : (
               <select
@@ -412,10 +444,12 @@ export const TaskList = () => {
                 name="choose-category"
                 className="choose-category-select"
               >
-                <option value="home">Home</option>
-                <option value="work">Work</option>
-                <option value="casual">Casual</option>
-                <option value="uncategorized">Uncategorized</option>
+                {taskCategories.map((taskCategory, idx) => (
+                  <option key={idx} value={taskCategory}>
+                    {taskCategory}
+                  </option>
+                ))}
+                <option value="Uncategorized">Uncategorized</option>
               </select>
             )}
           </div>
@@ -457,11 +491,13 @@ export const TaskList = () => {
                   className="filter-category-select"
                 >
                   <option value="">--Filter By--</option>
-                  <option value="all">All Tasks</option>
-                  <option value="home">Home</option>
-                  <option value="work">Work</option>
-                  <option value="casual">Casual</option>
-                  <option value="uncategorized">Uncategorized</option>
+                  <option value="All Tasks">All Tasks</option>
+                  {taskCategories.map((taskCategory, idx) => (
+                    <option key={idx} value={taskCategory}>
+                      {taskCategory}
+                    </option>
+                  ))}
+                  <option value="Uncategorized">Uncategorized</option>
                 </select>
               </div>
               <div className="sort-tasks">
@@ -472,9 +508,9 @@ export const TaskList = () => {
                   className="sort-tasks-select"
                 >
                   <option value="">--Sort By--</option>
-                  <option value="recently added">Recently Added</option>
-                  <option value="priority">Priority</option>
-                  <option value="last edited">Last Edited</option>
+                  <option value="Recently Added">Recently Added</option>
+                  <option value="Priority">Priority</option>
+                  <option value="Last Edited">Last Edited</option>
                 </select>
               </div>
             </div>
