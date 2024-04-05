@@ -13,6 +13,7 @@ export const TaskList = () => {
   const inputRef = useRef();
   const taskCategories = [
     "Chores",
+    "Household",
     "Work",
     "Casual",
     "Learning",
