@@ -170,6 +170,7 @@ export const TaskList = () => {
     setCategory("");
     setTaskValue("");
     setHighPriority(false);
+    setCount((prevCount) => prevCount + 1);
     inputRef.current.focus();
   };
 
