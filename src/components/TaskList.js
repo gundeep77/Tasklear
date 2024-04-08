@@ -143,7 +143,6 @@ export const TaskList = () => {
           return [prevTasks];
         });
       } else {
-        console.log("hello");
         setAllTasks(() => {
           if (category === "" || taskCategories.includes(category)) {
             localStorage.setItem("allTodos", JSON.stringify([newTask]));
@@ -288,7 +287,6 @@ export const TaskList = () => {
   };
 
   const handleFilterChange = (event) => {
-    console.log(event.target.value);
     setFilterParam(() => {
       if (
         event.target.value === "" ||
@@ -339,11 +337,11 @@ export const TaskList = () => {
   const displayedTasks = () => {
     if (filterParam === "All Tasks" || filterParam === "") {
       return showCompleted
-        ? allTasks.map((obj, idx) => {
+        ? allTasks.map((obj) => {
             if (!obj.completed) {
               return (
                 <Task
-                  key={idx}
+                  key={obj.id}
                   obj={obj}
                   handleStatusChange={handleStatusChange}
                   handleEditTask={handleEditTask}
@@ -353,10 +351,10 @@ export const TaskList = () => {
             }
             return null;
           })
-        : allTasks.map((obj, idx) => {
+        : allTasks.map((obj) => {
             return (
               <Task
-                key={idx}
+                key={obj.id}
                 obj={obj}
                 handleStatusChange={handleStatusChange}
                 handleEditTask={handleEditTask}
@@ -365,14 +363,16 @@ export const TaskList = () => {
             );
           });
     } else {
-      const filteredTasks = allTasks.filter((obj) => obj.category === filterParam);
+      const filteredTasks = allTasks.filter(
+        (obj) => obj.category === filterParam
+      );
       return filteredTasks.length ? (
         showCompleted ? (
-          filteredTasks.map((obj, idx) => {
+          filteredTasks.map((obj) => {
             if (!obj.completed) {
               return (
                 <Task
-                  key={idx}
+                  key={obj.id}
                   obj={obj}
                   handleStatusChange={handleStatusChange}
                   handleEditTask={handleEditTask}
@@ -383,10 +383,10 @@ export const TaskList = () => {
             return null;
           })
         ) : (
-          filteredTasks.map((obj, idx) => {
+          filteredTasks.map((obj) => {
             return (
               <Task
-                key={idx}
+                key={obj.id}
                 obj={obj}
                 handleStatusChange={handleStatusChange}
                 handleEditTask={handleEditTask}
@@ -430,8 +430,8 @@ export const TaskList = () => {
                 className="choose-category-select"
               >
                 <option value="">--Choose Category--</option>
-                {taskCategories.map((taskCategory, idx) => (
-                  <option key={idx} value={taskCategory}>
+                {taskCategories.map((taskCategory) => (
+                  <option key={taskCategory} value={taskCategory}>
                     {taskCategory}
                   </option>
                 ))}
@@ -443,8 +443,8 @@ export const TaskList = () => {
                 name="choose-category"
                 className="choose-category-select"
               >
-                {taskCategories.map((taskCategory, idx) => (
-                  <option key={idx} value={taskCategory}>
+                {taskCategories.map((taskCategory) => (
+                  <option key={taskCategory} value={taskCategory}>
                     {taskCategory}
                   </option>
                 ))}
@@ -491,8 +491,8 @@ export const TaskList = () => {
                 >
                   <option value="">--Filter By--</option>
                   <option value="All Tasks">All Tasks</option>
-                  {taskCategories.map((taskCategory, idx) => (
-                    <option key={idx} value={taskCategory}>
+                  {taskCategories.map((taskCategory) => (
+                    <option key={taskCategory} value={taskCategory}>
                       {taskCategory}
                     </option>
                   ))}
