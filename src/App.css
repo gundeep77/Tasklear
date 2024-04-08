@@ -146,7 +146,6 @@ button:hover {
   padding: 10px;
   border: 1.5px solid transparent;
   background-color: rgb(60, 74, 226);
-  transition: background-color 0.2s ease;
   color: white;
   outline: none;
   border: transparent;
@@ -161,7 +160,6 @@ button:hover {
   padding: 10px;
   border: 1.5px solid transparent;
   background-color: rgb(60, 74, 226);
-  transition: background-color 0.2s ease;
   color: white;
   outline: none;
   border: transparent;
@@ -176,7 +174,6 @@ button:hover {
   padding: 10px;
   border: 1.5px solid transparent;
   background-color: rgb(60, 74, 226);
-  transition: background-color 0.2s ease;
   color: white;
   outline: none;
   border: transparent;

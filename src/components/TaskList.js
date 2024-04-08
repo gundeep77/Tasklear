@@ -293,7 +293,7 @@ export const TaskList = () => {
       if (
         event.target.value === "" ||
         event.target.value === "All Tasks" ||
-        taskCategories.includes(event.target.value)
+        [...taskCategories, "Uncategorized"].includes(event.target.value)
       ) {
         localStorage.setItem("filterParam", JSON.stringify(event.target.value));
         return event.target.value;
@@ -365,10 +365,8 @@ export const TaskList = () => {
             );
           });
     } else {
-      const filteredTasks = allTasks.filter(
-        (obj) => obj.category === filterParam
-      );
-      return allTasks.filter((obj) => obj.category === filterParam).length ? (
+      const filteredTasks = allTasks.filter((obj) => obj.category === filterParam);
+      return filteredTasks.length ? (
         showCompleted ? (
           filteredTasks.map((obj, idx) => {
             if (!obj.completed) {
