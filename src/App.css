@@ -120,7 +120,7 @@ button:hover {
   line-height: 22px;
 }
 .task-date {
-  padding: 0 10px;
+  padding: 3px 10px;
   margin: auto 10px;
   font-size: small;
   opacity: 0.6;
@@ -136,6 +136,7 @@ button:hover {
   display: flex;
   justify-content: space-between;
   align-content: center;
+  padding: 3px 0;
 }
 
 .choose-category-select {
