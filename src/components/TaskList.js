@@ -45,7 +45,7 @@ export const TaskList = () => {
   );
 
   // const taskSuggestions = () => {
-  //   const suggestions = ["Meeting today at 11 AM", "Do laundry tomorrow", ""];
+  //   const suggestions = ["Meeting today at 11 AM", "Do laundry tomorrow"];
   //   setInterval(() => {
   //     for (const suggestion of suggestions) {
   //     }
@@ -104,7 +104,6 @@ export const TaskList = () => {
   useEffect(() => {
     if (!allTasks.length) {
       localStorage.clear();
-      setCategory("");
       setFilterParam("");
       setSortParameter("");
       setShowCompleted(false);
