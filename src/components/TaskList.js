@@ -115,7 +115,7 @@ export const TaskList = () => {
     event.preventDefault();
     if (!taskValue) {
       setTaskValue("");
-
+      inputRef.current.focus();
       return;
     }
     if (addOrEdit === "Add New Task") {
