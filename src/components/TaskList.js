@@ -276,7 +276,7 @@ export const TaskList = () => {
   };
 
   const handleDeleteAll = () => {
-    if (window.confirm("Delete all incomplete as well as complete tasks?")) {
+    if (window.confirm("Delete the entire list?")) {
       setAllTasks(() => {
         return [];
       });

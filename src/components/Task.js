@@ -1,3 +1,5 @@
+import React from "react";
+
 export const Task = (props) => (
   <div className="task">
     <div className="status-content-container">
